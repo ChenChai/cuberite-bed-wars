@@ -1,4 +1,9 @@
 PLUGIN = nil
+// TODO: stuff
+
+function DoStuff() 
+  
+end
 
 function Initialize(Plugin)
   Plugin:SetName("BedWarsItems")
