@@ -6,9 +6,11 @@ function Initialize(Plugin)
   Plugin:SetName("Bedwars Main")
   Plugin:SetVersion(1)
   
-    -- Basically set up all the hooks for the shop
+    -- Basically set up all the hooks for the shop and items which are in separate files
+    -- HOT SURE IF IT WORKS
   InitializeShop()
-    -- TODO make sure none of these hooks clash
+  InitializeItems()
+    -- TODO make sure none of these hooks clash, maybe refactor all hook calls into a separate file?
     -- Hooks
   cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_BREAKING_BLOCK, BrokenBlock)
   cPluginManager:AddHook(cPluginManager.HOOK_TICK, MyOnTick)
