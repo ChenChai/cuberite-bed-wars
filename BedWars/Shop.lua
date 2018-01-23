@@ -16,26 +16,7 @@ function InitializeShop()
                             }
  
   
-  ArmorArray = { [0] = {cItem(300, 1, 0, "unbreaking=10", ""), cItem(301, 1, 0, "unbreaking=10", "")}, -- Tier 0 leather leggings/boots
-                 [1] = {cItem(304, 1, 0, "unbreaking=10", ""), cItem(305, 1, 0, "unbreaking=10", "")},
-                 [2] = {cItem(308, 1, 0, "unbreaking=10", ""), cItem(309, 1, 0, "unbreaking=10", "")},
-                 [3] = {cItem(312, 1, 0, "unbreaking=10", ""), cItem(313, 1, 0, "unbreaking=10", "")}
-                }
-                
-                --the arrays in this array are structured after the ItemCategoryArrays later, which list the items you buy and the prices.
-                --They should still give you the same item that Mac's main plugin works with though.
-  PickArray =  { [1] = {cItem(E_ITEM_WOODEN_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),     {}, "Cost: 10 Iron", 10, 265};
-                 [2] = {cItem(E_ITEM_STONE_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),      {}, "Cost: 10 Iron", 10, 265};
-                 [3] = {cItem(E_ITEM_IRON_PICKAXE, 1, 0, "unbreaking=10;efficiency=2", ""),      {}, "Cost: 3 Gold", 3, 266};
-                 [4] = {cItem(E_ITEM_DIAMOND_PICKAXE, 1, 0, "unbreaking=10;efficiency=3", ""),      {}, "Cost: 6 Gold", 6, 266};
-                }
-  
-  
-  AxeArray  =  { [1] = {cItem(E_ITEM_WOODEN_AXE, 1, 0, "unbreaking=10;efficiency=1", ""),     {}, "Cost: 10 Iron", 10, 265};
-                 [2] = {cItem(E_ITEM_STONE_AXE, 1, 0, "unbreaking=10;efficiency=1", ""),      {}, "Cost: 10 Iron", 10, 265};
-                 [3] = {cItem(E_ITEM_IRON_AXE, 1, 0, "unbreaking=10;efficiency=2", ""),      {}, "Cost: 3 Gold", 3, 266};
-                 [4] = {cItem(E_ITEM_DIAMOND_AXE, 1, 0, "unbreaking=10;efficiency=3", ""),      {}, "Cost: 6 Gold", 6, 266};
-                }
+
                 
   
   

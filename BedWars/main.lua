@@ -9,11 +9,10 @@ function Initialize(Plugin)
     -- Basically set up all the hooks for the shop and items which are in separate files
   InitializeShop()
   InitializeItems()
+  
     -- TODO make sure none of these hooks clash, maybe refactor all hook calls into a separate file?
     -- Hooks
-  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_BREAKING_BLOCK, BrokenBlock)
-  cPluginManager:AddHook(cPluginManager.HOOK_TICK, MyOnTick)
-  cPluginManager:AddHook(cPluginManager.HOOK_KILLING, MyOnKilling)
+  BindHooks()
   
     -- Vars
   PLUGIN = Plugin
@@ -24,7 +23,7 @@ function Initialize(Plugin)
   IronGoldLocate = {{x = 1, y = 41, z = 74}, {x = 1, y = 41, z = -76}}
   DiamondLocate = {{x = 1, y = 41, z = 42}, {x = 1, y = 41, z = -39}}
   EmeraldLocate = {{x = -5, y = 42, z = -1}, {x = 7, y = 42, z = -1}}
-  Svamp = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly
+  Svamp = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly and de-hardcode
   Board = Svamp:GetScoreBoard() 
   Board:RegisterTeam('Red', 'Red', 'Red', '')
   Board:RegisterTeam('Blue', 'Blue', 'Blue', '')
@@ -44,23 +43,29 @@ function Initialize(Plugin)
   TimeMil = 0
   GameStarted = nil
   
+  -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}
   ArmorArray = { [0] = {cItem(300, 1, 0, "unbreaking=10", ""), cItem(301, 1, 0, "unbreaking=10", "")}, -- Tier 0 leather leggings/boots
                  [1] = {cItem(304, 1, 0, "unbreaking=10", ""), cItem(305, 1, 0, "unbreaking=10", "")},
                  [2] = {cItem(308, 1, 0, "unbreaking=10", ""), cItem(309, 1, 0, "unbreaking=10", "")},
-                 [3] = {cItem(312, 1, 0, "unbreaking=10", ""), cItem(313, 1, 0, "unbreaking=10", "")}  }
-                 
-  PickArray = { [0] =  cItem(),
-                [1] = cItem(E_ITEM_WOODEN_PICKAXE, 1, 0, 'unbreaking=10;efficiency=1'),
-                [2] = cItem(E_ITEM_STONE_PICKAXE, 1, 0, 'unbreaking=10;efficiency=1'),
-                [3] = cItem(E_ITEM_IRON_PICKAXE, 1, 0, 'unbreaking=10;efficiency=2'),
-                [4] = cItem(E_ITEM_DIAMOND_PICKAXE, 1, 0, 'unbreaking=10;efficiency=3')  }
+                 [3] = {cItem(312, 1, 0, "unbreaking=10", ""), cItem(313, 1, 0, "unbreaking=10", "")}
+                }
                 
-  AxeArray = { [0] =  cItem(),
-                [1] = cItem(E_ITEM_WOODEN_AXE, 1, 0, 'unbreaking=10;efficiency=1'),
-                [2] = cItem(E_ITEM_STONE_AXE, 1, 0, 'unbreaking=10;efficiency=1'),
-                [3] = cItem(E_ITEM_IRON_AXE, 1, 0, 'unbreaking=10;efficiency=2'),
-                [4] = cItem(E_ITEM_DIAMOND_AXE, 1, 0, 'unbreaking=10;efficiency=3')  }
-                
+                --the arrays in this array are structured after the ItemCategoryArrays later, which list the items you buy and the prices.
+                --They should still give you the same item that Mac's main plugin works with though.
+  PickArray =  { [0] = {cItem()},
+                 [1] = {cItem(E_ITEM_WOODEN_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),     {}, "Cost: 10 Iron", 10, 265};
+                 [2] = {cItem(E_ITEM_STONE_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),      {}, "Cost: 10 Iron", 10, 265};
+                 [3] = {cItem(E_ITEM_IRON_PICKAXE, 1, 0, "unbreaking=10;efficiency=2", ""),      {}, "Cost: 3 Gold", 3, 266};
+                 [4] = {cItem(E_ITEM_DIAMOND_PICKAXE, 1, 0, "unbreaking=10;efficiency=3", ""),      {}, "Cost: 6 Gold", 6, 266};
+                }
+  
+  
+  AxeArray  =  { [0] = {cItem()},
+                 [1] = {cItem(E_ITEM_WOODEN_AXE, 1, 0, "unbreaking=10;efficiency=1", ""),     {}, "Cost: 10 Iron", 10, 265};
+                 [2] = {cItem(E_ITEM_STONE_AXE, 1, 0, "unbreaking=10;efficiency=1", ""),      {}, "Cost: 10 Iron", 10, 265};
+                 [3] = {cItem(E_ITEM_IRON_AXE, 1, 0, "unbreaking=10;efficiency=2", ""),      {}, "Cost: 3 Gold", 3, 266};
+                 [4] = {cItem(E_ITEM_DIAMOND_AXE, 1, 0, "unbreaking=10;efficiency=3", ""),      {}, "Cost: 6 Gold", 6, 266};
+                }
   Board:RegisterObjective('Main', 'BED WARS', 0)
   Board:SetDisplay('Main', 1)
   
@@ -78,40 +83,7 @@ function OnDisable()
 end
 
       
-function BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
-  --Checks if a player has broken a bed block, and whos bed it is...
-  if BlockType == 26 then
-    if BlockX == BlueBedCoords['x'] then 
-      if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 then
-        if BlockY == BlueBedCoords['y'] then
-          if Player:GetTeam():GetName() == 'Blue' then
-            Player:SendMessage('THATS YOUR BED!')
-            return true
-          else
-            BlueBed = false
-            UpdateScore()
-          end
-        end
-      end
-    end
-    if BlockX == RedBedCoords['x'] then
-      if BlockZ == RedBedCoords['z'] or BlockZ == RedBedCoords['z'] - 1 then
-        if BlockY == RedBedCoords['y'] then
-          LOG(Player:GetTeam():GetName())
-          if Player:GetTeam():GetName() == 'Red' then
-            Player:SendMessage('THATS YOUR BED!')
-            return true
-          else
-            RedBed = false
-            UpdateScore()
-          end
-        end
-      end
-    end
-  else
-    return CheckBlock(BlockX, BlockY, BlockZ)--Checks if the piece was in the OG world
-  end
-end
+
 
 function JoinTeam(Split, Player)
   if Player:GetTeam() == nil then
@@ -177,40 +149,7 @@ function CheckBlock(BlockX, BlockY, BlockZ)
   end
 end
 
-function MyOnTick(TimeDelta)
-  if Time == nil then
-    --do nothing
-  else
-    TimeMil = TimeMil + TimeDelta
-    if TimeMil >= 1000 then
-      TimeMil = TimeMil - 1000
-      Time = Time + 1
-      --EXECUTED EVERY SECOND
-      for i, SpawnTime in ipairs(IronSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnIron()
-        end
-      end
-      for i, SpawnTime in ipairs(GoldSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnGold()
-        end
-      end
-      for i, SpawnTime in ipairs(EmeraldSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnEmerald()
-        end
-      end
-      for i, SpawnTime in ipairs(DiamondSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnDiamond()
-        end
-      end
-    end
-    --EXECUTED EVERY TICK
-    --nothing LUL
-  end
-end
+
 
 function SpawnIron()--spawns 5 iron
   for pos, coords in ipairs(IronGoldLocate) do
@@ -244,34 +183,7 @@ function SpawnDiamond()-- 1 diamond
   end
 end
 
-function MyOnKilling(victim, killer, info)
-  if victim:GetClass() == 'cPlayer' then
-    UpdateScore()
-    Svamp:BroadcastChat(victim:GetName() .. ' has been killed')
-    local team = victim:GetTeam()
-    if team then
-      local vic_team = team:GetName()
-    else
-      local vic_team = 'None'
-    end
-    if vic_team == 'Red' then
-      if RedBed == true then
-        Respawn(victim, RedSpawn['x'], RedSpawn['y'], RedSpawn['z'])
-      else
-        --finish him!!!
-      end
-    elseif vic_team == 'Blue' then
-      if BlueBed == true then
-        Respawn(victim, BlueSpawn['x'], BlueSpawn['y'], BlueSpawn['z'])
-      else
-        --finish him!!!
-      end
-    else
-      --Let em burn
-    end
-    vic_team = nil
-  end
-end
+
 
 function UpdateScore()
   --Looks at everything and updates scoreboard
