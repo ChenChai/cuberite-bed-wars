@@ -117,7 +117,7 @@ end
 
 function StartPlayer(Player)
   if Player:GetTeam() == nil then
-    Kick(Player)
+    Player:SetGameMode(gmSpectator)
   else
     Player.ArmorTier = 0
     Player.AxeTier = 0
@@ -217,9 +217,9 @@ function Respawn(player, x, y, z)
   inv:SetArmorSlot(2, ArmorArray[armor][1])
   inv:SetArmorSlot(3, ArmorArray[armor][2])
   -- Gib Pick
-  inv:SetHotbarSlot(1, PickArray[pick])
+  inv:SetHotbarSlot(1, PickArray[pick][1])
   --Gib Axe
-  inv:SetHotbarSlot(2, AxeArray[axe])
+  inv:SetHotbarSlot(2, AxeArray[axe][1])
   --
   if player.HasShears == true then
     inv.SetHotbarSlot(3, cItem(E_ITEM_SHEARS, 1, 0, "unbreaking=10"))
