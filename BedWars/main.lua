@@ -23,8 +23,11 @@ function Initialize(Plugin)
   IronGoldLocate = {{x = 1, y = 41, z = 74}, {x = 1, y = 41, z = -76}}
   DiamondLocate = {{x = 1, y = 41, z = 42}, {x = 1, y = 41, z = -39}}
   EmeraldLocate = {{x = -5, y = 42, z = -1}, {x = 7, y = 42, z = -1}}
-  Svamp = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly and de-hardcode
-  Board = Svamp:GetScoreBoard() 
+  
+  Arena = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly and de-hardcode
+  ArenaOriginal = cRoot:Get():GetWorld('SvampOriginal')
+  
+  Board = Arena:GetScoreBoard() 
   Board:RegisterTeam('Red', 'Red', 'Red', '')
   Board:RegisterTeam('Blue', 'Blue', 'Blue', '')
   BlueTeam = Board:GetTeam('Blue')
@@ -135,7 +138,7 @@ end
         
   
 function CheckBlock(BlockX, BlockY, BlockZ)
-  Is_Valid, BlockType2 = world2:GetBlockInfo(BlockX, BlockY, BlockZ)
+  Is_Valid, BlockType2 = ArenaOriginal:GetBlockInfo(BlockX, BlockY, BlockZ)
   -- Is_Valid = if the chunk has loaded, BlockType2is the block in the other world
   if Is_Valid then--If chunk is loaded, then compare the values of both blocks
     if BlockType == BlockType2 then
@@ -156,7 +159,7 @@ function SpawnIron()--spawns 5 iron
     loot = cItem(E_ITEM_IRON)
     local loop = 0
     while loop ~= 5 do
-      Svamp:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
+      Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
       loop = loop + 1
     end
   end
@@ -165,21 +168,21 @@ end
 function SpawnGold()--1 gold
   for pos, coords in ipairs(IronGoldLocate) do
     loot = cItem(E_ITEM_GOLD)
-    Svamp:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
+    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
   end
 end
 
 function SpawnEmerald()-- 1 em
   for pos, coords in ipairs(EmeraldLocate) do
     loot = cItem(E_ITEM_EMERALD)
-    Svamp:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
+    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
   end
 end
 
 function SpawnDiamond()-- 1 diamond
   for pos, coords in ipairs(DiamondLocate) do
     loot = cItem(E_ITEM_EMERALD)
-    Svamp:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
+    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
   end
 end
 
