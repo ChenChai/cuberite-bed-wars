@@ -1,4 +1,5 @@
 --Uses commands to organize players into teams, hadle spawning and beds
+-- I made a change
 
 PLUGIN = nil
 
