@@ -1,5 +1,6 @@
+-- This file handles item hooks
 
-function InitializeShop()
+function InitializeItems()
 
   DreamDefenderArray = {}
   BridgeEggArray = {}
@@ -20,13 +21,12 @@ function InitializeShop()
   cPluginManager.BindCommand("/empower", "", EmpowerAdd, " ~ /empower <power>")
 
 
-  LOG("Initialised " .. Plugin:GetName() .. " v." .. Plugin:GetVersion())
-return true
+  LOG("Initialised Bedwars Item Handling!")
+
 end
 
-function OnDisable()
-  LOG(PLUGIN:GetName() .. " is shutting down...")
-end
+
+
 
 function EmpowerAdd(Split, Player) -- Callback to use commands to give items (WIP) Depreciated
     
@@ -269,5 +269,3 @@ function OnWorldTick (World, TimeDelta)
   
   return
 end
-
-
