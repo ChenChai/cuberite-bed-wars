@@ -4,7 +4,6 @@ function BindHooks()
   
     -- map management hooks
   cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_BREAKING_BLOCK, OnPlayerBreakingBlock)
-  cPluginManager:AddHook(cPluginManager.HOOK_TICK, OnTick)
   cPluginManager:AddHook(cPluginManager.HOOK_KILLING, OnKilling)
   
     -- so far these are the item hooks; doesn't really matter since they'll be used for similar things
@@ -22,41 +21,6 @@ function BindHooks()
   cPluginManager:AddHook(cPluginManager.HOOK_SPAWNING_ENTITY, OnSpawningEntity)
   
   
-end
-
-function OnTick(TimeDelta)
-  if Time == nil then
-    --do nothing
-  else
-    TimeMil = TimeMil + TimeDelta
-    if TimeMil >= 1000 then
-      TimeMil = TimeMil - 1000
-      Time = Time + 1
-      --EXECUTED EVERY SECOND
-      for i, SpawnTime in ipairs(IronSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnIron()
-        end
-      end
-      for i, SpawnTime in ipairs(GoldSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnGold()
-        end
-      end
-      for i, SpawnTime in ipairs(EmeraldSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnEmerald()
-        end
-      end
-      for i, SpawnTime in ipairs(DiamondSpawnTimes) do
-        if Time == SpawnTime then
-          SpawnDiamond()
-        end
-      end
-    end
-    --EXECUTED EVERY TICK
-    --nothing LUL
-  end
 end
 
 function OnKilling(victim, killer, info)
@@ -183,8 +147,10 @@ function OnProjectileHitEntity(ProjectileEntity, Entity)
 end
 
 function OnWorldTick (World, TimeDelta)
-  
+
+  SpawnItemClock(TimeDelta) -- This is Nem's
   TickSpawnedMobs(World) -- Items.Lua
+  
   return
 end
 
