@@ -1,5 +1,4 @@
 function InitializeTeamShop()
-  
   ItemShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Team Shop")
   return true
 end
@@ -15,9 +14,16 @@ function OpenTeamShop(Player)
   
   
   
-  RedTeam.Upgrades = { ["Effects"] = {["effHaste"] = 0};
+  RedTeam.Upgrades = { ["Effects"] = {
+                                      ["effHaste"] = 0
+                                      
+                                      };
+                       
+                       
                        ["ForgeTier"] = 0;
-                       ["SharpenedSwords"] = 0
+                       
+                       ["SharpenedSwords"] = 0;
+                       ["ReinforcedArmor"] = 0;
                      }
                      
   Player:SetTeam(RedTeam)
@@ -53,12 +59,33 @@ function OpenTeamShop(Player)
                           [13] = {UpgradeType = "SharpenedSwords";
                                   MaxTier = 1;
                                   [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I to all players on your team!"}, 
+                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aSharpened Swords"),  DisplayLore = {"§7Enchant swords with Sharpness I", "for all players on your team!"}, 
                                          CostLore = "Cost: 8 Diamond", Cost = cItem(E_ITEM_DIAMOND, 8, 0, "")}
-                                 }
-                                       
+                                 };
+                                 
+                          [14] = {UpgradeType = "ReinforcedArmor";
+                                  MaxTier = 4;
+                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor I"),  DisplayLore = {"§7Enchant Armor with Protection I", "for all players on your team!"}, 
+                                         CostLore = "Cost: 5 Diamond", Cost = cItem(E_ITEM_DIAMOND, 5, 0, "")};
+                                  
+                                  [2] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATED, 1, 0, "", "§aReinforced Armor II"),  DisplayLore = {"§7Enchant Armor with Protection II", "for all players on your team!"}, 
+                                         CostLore = "Cost: 10 Diamond", Cost = cItem(E_ITEM_DIAMOND, 10, 0, "")};
+                                  
+                                  [3] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor III"),  DisplayLore = {"§7Enchant Armor with Protection III", "for all players on your team!"}, 
+                                         CostLore = "Cost: 20 Diamond", Cost = cItem(E_ITEM_DIAMOND, 20, 0, "")};
+                                  
+                                  [4] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor IV"),  DisplayLore = {"§7Enchant Armor with Protection IV", "for all players on your team!"}, 
+                                         CostLore = "Cost: 30 Diamond", Cost = cItem(E_ITEM_DIAMOND, 30, 0, "")};
+                                 }            
+                          
+                          
+                          
+                          
+                          
+                          
                           }
   
-  for i, Upgrade in next, TeamShopContents do -- Sets up table with items in slot
+  for i, Upgrade in next, TeamShopContents do -- Sets up table with display items in slot
     
     local Item
     local Tier
@@ -75,8 +102,6 @@ function OpenTeamShop(Player)
       
       Item = Upgrade[DisplayTier].DisplayItem
     end
-    
-    LOG(Tier)
     
     Item.m_LoreTable = Upgrade[DisplayTier].DisplayLore -- sticks lore table on from array 
     table.insert(Item.m_LoreTable, Upgrade.CostLore)
