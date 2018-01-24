@@ -178,9 +178,38 @@ end
 
 function OnPlayerBreakingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
   --Checks if a player has broken a bed block, and whos bed it is...
-  return BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta) --in main.lua
+  if BlockType == 26 then
+    if BlockX == BlueBedCoords['x'] then 
+      if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 then
+        if BlockY == BlueBedCoords['y'] then
+          if Player:GetTeam():GetName() == 'Blue' then
+            Player:SendMessage('THATS YOUR BED!')
+            return true
+          else
+            BlueBed = false
+            UpdateScore()
+          end
+        end
+      end
+    end
+    if BlockX == RedBedCoords['x'] then
+      if BlockZ == RedBedCoords['z'] or BlockZ == RedBedCoords['z'] - 1 then
+        if BlockY == RedBedCoords['y'] then
+          LOG(Player:GetTeam():GetName())
+          if Player:GetTeam():GetName() == 'Red' then
+            Player:SendMessage('THATS YOUR BED!')
+            return true
+          else
+            RedBed = false
+            UpdateScore()
+          end
+        end
+      end
+    end
+  else
+    return CheckBlock(BlockX, BlockY, BlockZ)--Checks if the piece was in the OG world
+  end
 end
-
 function OnPlayerEating(Player)
   
   if Player:GetInventory():GetEquippedItem().m_ItemType == E_ITEM_POTION then

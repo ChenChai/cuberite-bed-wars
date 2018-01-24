@@ -6,15 +6,19 @@ function Initialize(Plugin)
   Plugin:SetName("Bedwars Main")
   Plugin:SetVersion(1)
   
+  GetConfig()
+  
     -- Basically set up all the hooks for the shop and items which are in separate files
   InitializeShop()
   InitializeItems()
   InitPickupSpawn()
-  
     -- TODO make sure none of these hooks clash, maybe refactor all hook calls into a separate file?
     -- Hooks
   BindHooks()
+  
 
+  
+  
     -- Vars
   PLUGIN = Plugin
   
@@ -33,12 +37,8 @@ function Initialize(Plugin)
   RedTeam:Reset()
   RedSpawn = {x = 7, y = 42, z = -76}
   BlueSpawn = {x = -5, y = 42, z = 74}
-  RedBedCoords = {x = {1}, 
-                  y = {41}, 
-                  z = {-69, -70}  }
-  BlueBedCoords = {x = {1}, 
-                   y = {41}, 
-                   z = {67, 68} }
+  RedBedCoords = {x = 1, y = 41, z = -69}
+  BlueBedCoords = {x = 1, y = 41, z = 67}
   RedAmount = 0
   BlueAmount = 0
   BlueBed = true
@@ -122,31 +122,10 @@ end
 function StartGame()
   if GameStarted == nil then
     cRoot:Get():ForEachPlayer(StartPlayer)
-    Time = 0   
+    Time = 0
     GameStarted = true
-    
-    -- Loads ArenaOriginal
-    LoadChunks()
   end
   return true
-end
-
-function LoadChunks()
-  LowX = -1
-  HighX = 2 --add 1 to num for while loop
-  
-  LowZ = -6
-  HighZ = 6 -- add 1 to num for while loop
-  
-  local CountX = LowX
-  while CountX ~= HighX do
-    local CountZ = LowZ
-    while CountZ ~= HighZ do
-      ArenaOriginal:SetChunkAlwaysTicked(CountX, CountZ, true)
-      CountZ = CountZ + 1
-    end
-    CountX = CountX + 1
-  end
 end
 
 function StartPlayer(Player)
@@ -168,51 +147,18 @@ function StartPlayer(Player)
 end
         
   
-function CheckBlock(BlockType, BlockX, BlockY, BlockZ)
-  local Is_Valid = false
-  while Is_Valid == false do
-    Is_Valid, BlockType2 = ArenaOriginal:GetBlockInfo(BlockX, BlockY, BlockZ)  
-  end
-  if BlockType == BlockType2 then
-    return true--if they are the same, prevent the player from breaking the block
-  else
-    return false--if they are different, allow player to break it
-  end     
-end
-
-
-function BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
-  --Checks if a player has broken a bed block, and whos bed it is...
-  if BlockType == 26 then-- if its a bed
-    if BlockX == BlueBedCoords['x'] or BlockX == BlueBedCoords['x'] + 1 or BlockX == BlueBedCoords['x'] - 1 then
-      if BlockY == BlueBedCoords['y'] then
-        if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 or BlockZ == BlueBedCoords['z'] - 1 then
-          if Player:GetTeam():GetName() == 'Blue' then
-            Player:SendMessage('THATS YOUR BED!')
-            return true
-          else
-            BlueBed = false
-            UpdateScore()
-          end
-        end
-      end
-    end
-  
-   if BlockX == RedBedCoords['x'] or BlockX == RedBedCoords['x'] + 1 or BlockX == RedBedCoords['x'] - 1 then
-      if BlockY == RedBedCoords['y'] then
-        if BlockZ == RedBedCoords['z'] or BlockZ == RedBedCoords['z'] + 1 or BlockZ == RedBedCoords['z'] - 1 then
-          if Player:GetTeam():GetName() == 'Red' then
-            Player:SendMessage('THATS YOUR BED!')
-            return true
-          else
-            RedBed = false
-            UpdateScore()
-          end
-        end
-      end
-    end
-  else
-    return CheckBlock(BlockType, BlockX, BlockY, BlockZ)--Checks if the piece was in the OG world
+function CheckBlock(BlockX, BlockY, BlockZ)
+  Is_Valid, BlockType2 = ArenaOriginal:GetBlockInfo(BlockX, BlockY, BlockZ)
+  -- Is_Valid = if the chunk has loaded, BlockType2is the block in the other world
+  if Is_Valid then--If chunk is loaded, then compare the values of both blocks
+    if BlockType == BlockType2 then
+      return true--if they are the same, prevent the player from breaking the block
+    else
+      return false--if they are different, allow player to break it
+    end     
+  else --if the chunk isnt loaded, call this function again until the chunk has loaded to get an answer
+    i = BlockBreak(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
+    return i
   end
 end
 
