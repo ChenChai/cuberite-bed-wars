@@ -4,38 +4,85 @@ function InitializeTeamShop()
 end
 
 function OpenTeamShop(Player)
-  TeamShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Team Shop")
   
+
+    -- Debugging only
+  if (RedTeam.Upgrades == nil) then
+    RedTeam.Upgrades = { 
+                         ["ForgeTier"] = 0;
+                         
+                         ["ManiacMiner"] = 0;
+                         
+                         ["SharpenedSwords"] = 0;
+                         ["ReinforcedArmor"] = 0;
+                         
+  
+                         ["ItsATrap"] = 0;
+                         ["MiningFatigue"] = 0;
+                         
+                         ["HealPool"] = 0
+                         
+                         
+                       }
+  Player:SetTeam(RedTeam)
+  end
+  
+  TeamShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Team Shop")
+  ResetTeamShopWindow(Player, TeamShopWindow)
+  
+  
+  Player:OpenWindow(TeamShopWindow)
+  Player:SendMessage("Shop Opened!")
+end
+
+
+function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedItem)
+
+  if ClickedItem.m_ItemType == 0 or ClickedItem.m_ItemType == -1 then --Checks if you're clicking on air
+    return true
+  end
+  
+  if SlotNum < 0 or SlotNum > 35 then --Checks if you're clicking the shop
+    return true
+  end
+  
+  if ClickAction == caShiftLeftClick then --Checks if you're trying to shift click
+    return true
+  end
+  
+  local UpgradeBuying = TeamShopContents[SlotNum]
+  
+    -- find the current tier of the upgrade
+  local Tier = Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType]
+  local DisplayTier = math.min(Tier + 1, UpgradeBuying.MaxTier)
+  
+  if Tier >= UpgradeBuying.MaxTier then
+    Player:SendMessage("§6Upgrade already bought!")
+    return true
+  end
+  
+  if Player:GetInventory():HasItems(UpgradeBuying[DisplayTier].Cost) then-- Check if player has resources
+    Player:GetInventory():RemoveItem(UpgradeBuying[DisplayTier].Cost) -- removes resources from their inventory
+    Player:SendMessage("Upgrade bought!")
+    
+    Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType] = DisplayTier
+    ResetTeamShopWindow(Player, Window)
+    return true
+  else
+    Player:SendMessage("§6Not enough resources!")
+  end
+  
+  
+  return true
+end
+
+function ResetTeamShopWindow(Player, Window)
+
   for i=0, 35, 1 do--Clears any previous items
     TeamShopWindow:SetSlot(Player, i, cItem(0, 1, 0, "", ""))
   end
   
-  
-  
-  
-  
-  RedTeam.Upgrades = { 
-                       ["ForgeTier"] = 0;
-                       
-                       ["ManiacMiner"] = 0;
-                       
-                       ["SharpenedSwords"] = 0;
-                       ["ReinforcedArmor"] = 0;
-                       
-
-                       ["ItsATrap"] = 0;
-                       ["MiningFatigue"] = 0;
-                       
-                       ["HealPool"] = 0
-                       
-                       
-                     }
-                     
-  Player:SetTeam(RedTeam)
-  
-  
-  
-  local TeamShopContents = {
+  TeamShopContents = {
                           [11] = {UpgradeType = "ForgeTier";
                                   MaxTier = 4;
                                   [1] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aIron Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron and gold by 50%!" },  
@@ -107,55 +154,22 @@ function OpenTeamShop(Player)
       -- Tier of upgrade the player already has
     local Tier = Player:GetTeam().Upgrades[Upgrade.UpgradeType]
       -- Tier of upgrade the shop will shop to them
-    local DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
-    
+    local DisplayTier = math.min(Tier + 1, Upgrade.MaxTier)
       
     local Item = Upgrade[DisplayTier].DisplayItem
     
+    local LoreTable = Upgrade[DisplayTier].DisplayLore
+    table.insert(LoreTable, Upgrade[DisplayTier].CostLore)
     
-    Item.m_LoreTable = Upgrade[DisplayTier].DisplayLore -- sticks lore table on from array 
-    table.insert(Item.m_LoreTable, Upgrade.CostLore)
+    Item.m_LoreTable = LoreTable-- sticks lore table on
     TeamShopWindow:SetSlot(Player, i, Item) -- puts item in window
     
   end
   
   
-  ItemShopWindow:SetOnClicked(TeamShopClickedCallback)
-  Player:OpenWindow(TeamShopWindow)
-  Player:SendMessage("Shop Opened!")
-end
-
-
-function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedItem)
+  TeamShopWindow:SetOnClicked(TeamShopClickedCallback)
   
-  if a_ClickedItem.m_ItemType == 0 or a_ClickedItem.m_ItemType == -1 then --Checks if you're clicking on air
-    return true
-  end
-  
-  if a_SlotNum < 0 or a_SlotNum > 35 then --Checks if you're clicking the shop
-    return true
-  end
-  
-  if a_ClickAction == caShiftLeftClick then --Checks if you're trying to shift click
-    return true
-  end
-  
-  local UpgradeBuying = TeamShopContents[SlotNum]
-  
-    -- find the current tier of the upgrade
-  local Tier = Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType]
-  
-  if Tier >= UpgradeBuying.MaxTier then
-    Player:SendMessage("§6Upgrade already bought!")
-    return true
-  end
-  
-  
-  
-  
-  
-  
-  return
+  return Window
 end
 
 
