@@ -58,7 +58,7 @@ function ShopCommand(Split, Player)
 end
 
 
-function OpenShop(Player)
+function OpenShop()
   ItemShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Item Shop")
   ResetItemShopWindow(Player, ItemShopWindow)
   ItemShopWindow:SetOnClicked(ItemShopClickedCallback)
