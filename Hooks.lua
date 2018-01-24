@@ -146,9 +146,10 @@ function OnProjectileHitEntity(ProjectileEntity, Entity)
   
 end
 
-function OnWorldTick (World, TimeDelta)
+function OnWorldTick(World, TimeDelta)
   SpawnItemClock(TimeDelta) -- goes to pickup spawn
   TickSpawnedMobs(World) -- Items.Lua
+  Arena:ForEachPlayer(CheckIfInTrap) --goes to ItsATrap.lua
   return
 end
 
