@@ -45,7 +45,8 @@ function OnKilling(victim, killer, info)
         --finish him!!!
       end
     else
-      --Let em burn
+      --Let em spectate
+      victim:SetGameMode(gmSpectator)
     end
     vic_team = nil
   end
