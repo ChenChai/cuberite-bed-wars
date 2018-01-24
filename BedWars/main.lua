@@ -23,6 +23,9 @@ function Initialize(Plugin)
   Arena = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly and de-hardcode
   ArenaOriginal = cRoot:Get():GetWorld('SvampOriginal')
   
+  
+  
+  
   Board = Arena:GetScoreBoard() 
   Board:RegisterTeam('Red', 'Red', 'Red', '')
   Board:RegisterTeam('Blue', 'Blue', 'Blue', '')
@@ -42,7 +45,14 @@ function Initialize(Plugin)
   TimeMil = 0
   GameStarted = nil
   
-  -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}
+    -- Recalls data from ArenaSaveData file and writes to this SpawnLocationArray; see Storage.lua
+    -- for now it's just initialized to hardcoded values from above, later will be more malleable
+  SpawnLocationArray = {["RedSpawn"] = RedSpawn, ["BlueSpawn"] = BlueSpawn, ["RedBedCoords"] = RedBedCoords, ["BlueBedCoords"] = BlueBedCoords}
+  LoadArena() -- Storage.lua
+  
+  LOG(SpawnLocationArray["RedSpawn"].x)
+  
+   -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}
   ArmorArray = { [0] = {cItem(300, 1, 0, "unbreaking=10", ""), cItem(301, 1, 0, "unbreaking=10", "")}, -- Tier 0 leather leggings/boots
                  [1] = {cItem(304, 1, 0, "unbreaking=10", ""), cItem(305, 1, 0, "unbreaking=10", "")},
                  [2] = {cItem(308, 1, 0, "unbreaking=10", ""), cItem(309, 1, 0, "unbreaking=10", "")},
@@ -80,7 +90,7 @@ end
 function OnDisable()
   LOG(PLUGIN:GetName() .. " is shutting down...")
   
-  SaveArenas() -- Storage.lua 
+  SaveArena() -- Storage.lua 
 end
 
       
