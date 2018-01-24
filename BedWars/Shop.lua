@@ -1,3 +1,4 @@
+-- TODO Burn this code
 
 function InitializeShop()
   
