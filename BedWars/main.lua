@@ -30,8 +30,12 @@ function Initialize(Plugin)
   RedTeam:Reset()
   RedSpawn = {x = 7, y = 42, z = -76}
   BlueSpawn = {x = -5, y = 42, z = 74}
-  RedBedCoords = {x = 1, y = 41, z = -69}
-  BlueBedCoords = {x = 1, y = 41, z = 67}
+  RedBedCoords = {x = {1}, 
+                  y = {41}, 
+                  z = {-69, -70}  }
+  BlueBedCoords = {x = {1}, 
+                   y = {41}, 
+                   z = {67, 68} }
   RedAmount = 0
   BlueAmount = 0
   BlueBed = true
@@ -131,8 +135,8 @@ function StartPlayer(Player)
 end
         
   
-function CheckBlock(BlockX, BlockY, BlockZ)
-  Is_Valid, BlockType2 = ArenaOriginal:GetBlockInfo(BlockX, BlockY, BlockZ)
+function CheckBlock(BlockType, BlockX, BlockY, BlockZ)
+  Is_Valid, BlockType2 = ArenaOriginal:GetBlockInfo(BlockX, BlockY, BlockZ) 
   -- Is_Valid = if the chunk has loaded, BlockType2is the block in the other world
   if Is_Valid then--If chunk is loaded, then compare the values of both blocks
     if BlockType == BlockType2 then
@@ -141,8 +145,42 @@ function CheckBlock(BlockX, BlockY, BlockZ)
       return false--if they are different, allow player to break it
     end     
   else --if the chunk isnt loaded, call this function again until the chunk has loaded to get an answer
-    i = BlockBreak(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
-    return i
+    return CheckBlock(BlockType, BlockX, BlockY, BlockZ)
+  end
+end
+
+function BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
+  --Checks if a player has broken a bed block, and whos bed it is...
+  if BlockType == 26 then
+    if BlockX == BlueBedCoords['x'] or BlockX == BlueBedCoords['x'] + 1 or BlockX == BlueBedCoords['x'] - 1 then
+      if BlockY == BlueBedCoords['y'] then
+        if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 or BlockZ == BlueBedCoords['z'] - 1 then
+          if Player:GetTeam():GetName() == 'Blue' then
+            Player:SendMessage('THATS YOUR BED!')
+            return true
+          else
+            BlueBed = false
+            UpdateScore()
+          end
+        end
+      end
+    end
+  
+   if BlockX == RedBedCoords['x'] or BlockX == RedBedCoords['x'] + 1 or BlockX == RedBedCoords['x'] - 1 then
+      if BlockY == RedBedCoords['y'] then
+        if BlockZ == RedBedCoords['z'] or BlockZ == RedBedCoords['z'] + 1 or BlockZ == RedBedCoords['z'] - 1 then
+          if Player:GetTeam():GetName() == 'Red' then
+            Player:SendMessage('THATS YOUR BED!')
+            return true
+          else
+            RedBed = false
+            UpdateScore()
+          end
+        end
+      end
+    end
+  else
+    return CheckBlock(BlockType, BlockX, BlockY, BlockZ)--Checks if the piece was in the OG world
   end
 end
 
