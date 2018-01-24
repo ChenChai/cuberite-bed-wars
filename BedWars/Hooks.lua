@@ -147,19 +147,8 @@ function OnProjectileHitEntity(ProjectileEntity, Entity)
 end
 
 function OnWorldTick (World, TimeDelta)
-<<<<<<< HEAD
-  SpawnItemClock(TimeDelta) -- This is Nem's
-  TickSpawnedMobs(World)
-=======
-  
-  TickSpawnedMobs(World) -- Items.Lua
->>>>>>> 64570febc73f532580bea05a10b4c6c32023abc9
-=======
-
   SpawnItemClock(TimeDelta) -- This is Nem's
   TickSpawnedMobs(World) -- Items.Lua
-  
->>>>>>> c70c390d6569201c78f1b71ef1d259843e0b2dd7
   return
 end
 
