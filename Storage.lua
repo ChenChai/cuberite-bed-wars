@@ -25,7 +25,6 @@ function LoadArena()
     -- loop through each of the keys and each of the values in each of the keys, writing to the SpawnLocationArray
   for k = 0, IniFile:GetNumKeys() - 1 do
     for v = 0, IniFile:GetNumValues(k) - 1 do
-      LOG(SpawnLocationArray[IniFile:GetKeyName(k)][IniFile:GetValueName(k, v)])
       SpawnLocationArray[IniFile:GetKeyName(k)][IniFile:GetValueName(k, v)] = IniFile:GetValue(k, v)
     end
     

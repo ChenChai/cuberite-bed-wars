@@ -52,8 +52,6 @@ function Initialize(Plugin)
   SpawnLocationArray = {["RedSpawn"] = RedSpawn, ["BlueSpawn"] = BlueSpawn, ["RedBedCoords"] = RedBedCoords, ["BlueBedCoords"] = BlueBedCoords}
   LoadArena() -- Storage.lua
   
-  LOG(SpawnLocationArray["RedSpawn"].x)
-  
    -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}
   ArmorArray = { [0] = {cItem(300, 1, 0, "unbreaking=10", ""), cItem(301, 1, 0, "unbreaking=10", "")}, -- Tier 0 leather leggings/boots
                  [1] = {cItem(304, 1, 0, "unbreaking=10", ""), cItem(305, 1, 0, "unbreaking=10", "")},

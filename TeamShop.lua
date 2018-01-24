@@ -27,26 +27,26 @@ function OpenTeamShop(Player)
   local TeamShopContents = {
                           [11] = {UpgradeType = "ForgeTier";
                                   MaxTier = 4;
-                                  [1] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aIron Forge"),    DisplayLore = {"§7Increases the spawn rate of iron and gold by 50%!" },  
+                                  [1] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aIron Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron and gold by 50%!" },  
                                          CostLore = "Cost: 4 Diamond", Cost = cItem(E_ITEM_DIAMOND, 4, 0, "")};
                                          
-                                  [2] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aGold Forge"),    DisplayLore = {"§7Increases the spawn rate of iron and gold by 100%!" }, 
+                                  [2] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aGold Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron and gold by 100%!" }, 
                                          CostLore = "Cost: 8 Diamond", Cost = cItem(E_ITEM_DIAMOND, 8, 0, "")};
                                          
-                                  [3] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aEmerald Forge"), DisplayLore = {"§7Activates the Emerald spawner in your team's Forge!" }, 
+                                  [3] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aEmerald Forge"), DisplayLore = {"§7Activates the Emerald spawner", "§7in your team's Forge!" }, 
                                          CostLore = "Cost: 12 Diamond", Cost = cItem(E_ITEM_DIAMOND, 12, 0, "")};
                                          
-                                  [4] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aGold Forge"),    DisplayLore = {"§7Increases the spawn rate of iron, gold, and emerald by 200%!" }, 
+                                  [4] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aGold Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron, gold, and emerald by 200%!" }, 
                                          CostLore = "Cost: 16 Emerald", Cost = cItem(E_ITEM_DIAMOND, 16, 0, "")}
                                   };
                                   
                           [12] = {UpgradeType = "Effects";
                                   MaxTier = 2;
                                   EffectType = "effHaste";
-                                  [1] = {DisplayItem = cItem(E_ITEM_GOLD_PICKAXE, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I to all players on your team!"}, 
+                                  [1] = {DisplayItem = cItem(E_ITEM_GOLD_PICKAXE, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I", "§7to all players on your team!"}, 
                                          CostLore = "Cost: 4 Diamond", Cost = cItem(E_ITEM_DIAMOND, 4, 0, "")};
                                          
-                                  [2] = {DisplayItem = cItem(E_ITEM_GOLD_PICKAXE, 1, 0, "", "§aManiac Miner II"), DisplayLore = {"§7Give permanent Haste II to all players on your team!"}, 
+                                  [2] = {DisplayItem = cItem(E_ITEM_GOLD_PICKAXE, 1, 0, "", "§aManiac Miner II"), DisplayLore = {"§7Give permanent Haste II", "§7to all players on your team!"}, 
                                          CostLore = "Cost: 6 Diamond", Cost = cItem(E_ITEM_DIAMOND, 6, 0, "")};
                                  };
                           
@@ -55,27 +55,32 @@ function OpenTeamShop(Player)
                                   [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I to all players on your team!"}, 
                                          CostLore = "Cost: 8 Diamond", Cost = cItem(E_ITEM_DIAMOND, 8, 0, "")}
                                  }
-                          
-                          
+                                       
                           }
   
   for i, Upgrade in next, TeamShopContents do -- Sets up table with items in slot
     
     local Item
+    local Tier
+    local DisplayTier
     
     if Upgrade.UpgradeType == "Effects" then
-      local CurrentEffectTier = Player:GetTeam().Effects[EffectType]
-      Item = Upgrade[math.max(CurrentEffectTier + 1, Upgrade.MaxTier)].DisplayItem
+      Tier = Player:GetTeam().Upgrades.Effects[Upgrade.EffectType]
+      DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
+      
+      Item = Upgrade[DisplayTier].DisplayItem
     else
-      local CurrentUpgradeTier = Player:GetTeam()[Upgrade.UpgradeType]
-      Item = Upgrade[math.max(CurrentUpgradeTier+1, Upgrade.MaxTier)]
+      Tier = Player:GetTeam().Upgrades[Upgrade.UpgradeType]
+      DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
+      
+      Item = Upgrade[DisplayTier].DisplayItem
     end
     
+    LOG(Tier)
     
-    
-    Item.m_LoreTable = Upgrade.DisplayLore -- sticks lore table on from array 
+    Item.m_LoreTable = Upgrade[DisplayTier].DisplayLore -- sticks lore table on from array 
     table.insert(Item.m_LoreTable, Upgrade.CostLore)
-    Window:SetSlot(Player, i, Item) -- puts item in window
+    TeamShopWindow:SetSlot(Player, i, Item) -- puts item in window
     
   end
   
