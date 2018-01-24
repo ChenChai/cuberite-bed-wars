@@ -60,7 +60,9 @@ function TickSpawnedMobs(World)
   return
 end
   
-
+function DrinkCustomPotion(Player)
+  
+end
 function PlaceInstantTNT(Player, BlockX, BlockY, BlockZ)
     Player:GetInventory():RemoveOneEquippedItem()
     Player:GetWorld():SpawnPrimedTNT(Vector3d(BlockX, BlockY, BlockZ), 70, 5)
