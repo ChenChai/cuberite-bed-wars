@@ -14,16 +14,21 @@ function OpenTeamShop(Player)
   
   
   
-  RedTeam.Upgrades = { ["Effects"] = {
-                                      ["effHaste"] = 0
-                                      
-                                      };
-                       
-                       
+  RedTeam.Upgrades = { 
                        ["ForgeTier"] = 0;
+                       
+                       ["ManiacMiner"] = 0;
                        
                        ["SharpenedSwords"] = 0;
                        ["ReinforcedArmor"] = 0;
+                       
+
+                       ["ItsATrap"] = 0;
+                       ["MiningFatigue"] = 0;
+                       
+                       ["HealPool"] = 0
+                       
+                       
                      }
                      
   Player:SetTeam(RedTeam)
@@ -46,9 +51,8 @@ function OpenTeamShop(Player)
                                          CostLore = "Cost: 16 Emerald", Cost = cItem(E_ITEM_DIAMOND, 16, 0, "")}
                                   };
                                   
-                          [12] = {UpgradeType = "Effects";
+                          [12] = {UpgradeType = "ManiacMiner";
                                   MaxTier = 2;
-                                  EffectType = "effHaste";
                                   [1] = {DisplayItem = cItem(E_ITEM_GOLD_PICKAXE, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I", "§7to all players on your team!"}, 
                                          CostLore = "Cost: 4 Diamond", Cost = cItem(E_ITEM_DIAMOND, 4, 0, "")};
                                          
@@ -58,50 +62,56 @@ function OpenTeamShop(Player)
                           
                           [13] = {UpgradeType = "SharpenedSwords";
                                   MaxTier = 1;
-                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aManiac Miner I"),  DisplayLore = {"§7Give permanent Haste I to all players on your team!"}, 
-                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aSharpened Swords"),  DisplayLore = {"§7Enchant swords with Sharpness I", "for all players on your team!"}, 
+                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_SWORD, 1, 0, "", "§aSharpened Swords"),  DisplayLore = {"§7Enchant swords with Sharpness I", "§7for all players on your team!"}, 
                                          CostLore = "Cost: 8 Diamond", Cost = cItem(E_ITEM_DIAMOND, 8, 0, "")}
                                  };
                                  
                           [14] = {UpgradeType = "ReinforcedArmor";
                                   MaxTier = 4;
-                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor I"),  DisplayLore = {"§7Enchant Armor with Protection I", "for all players on your team!"}, 
+                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor I"),  DisplayLore = {"§7Enchant Armor with Protection I", "§7for all players on your team!"}, 
                                          CostLore = "Cost: 5 Diamond", Cost = cItem(E_ITEM_DIAMOND, 5, 0, "")};
                                   
-                                  [2] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATED, 1, 0, "", "§aReinforced Armor II"),  DisplayLore = {"§7Enchant Armor with Protection II", "for all players on your team!"}, 
+                                  [2] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor II"),  DisplayLore = {"§7Enchant Armor with Protection II", "§7for all players on your team!"}, 
                                          CostLore = "Cost: 10 Diamond", Cost = cItem(E_ITEM_DIAMOND, 10, 0, "")};
                                   
-                                  [3] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor III"),  DisplayLore = {"§7Enchant Armor with Protection III", "for all players on your team!"}, 
+                                  [3] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor III"),  DisplayLore = {"§7Enchant Armor with Protection III", "§7for all players on your team!"}, 
                                          CostLore = "Cost: 20 Diamond", Cost = cItem(E_ITEM_DIAMOND, 20, 0, "")};
                                   
-                                  [4] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor IV"),  DisplayLore = {"§7Enchant Armor with Protection IV", "for all players on your team!"}, 
+                                  [4] = {DisplayItem = cItem(E_ITEM_IRON_CHESTPLATE, 1, 0, "", "§aReinforced Armor IV"),  DisplayLore = {"§7Enchant Armor with Protection IV", "§7for all players on your team!"}, 
                                          CostLore = "Cost: 30 Diamond", Cost = cItem(E_ITEM_DIAMOND, 30, 0, "")};
-                                 }            
+                                 };
                           
                           
+                          [15] = {UpgradeType = "ItsATrap";
+                                  MaxTier = 1;
+                                  [1] = {DisplayItem = cItem(E_BLOCK_TRIPWIRE_HOOK, 1, 0, "", "§aIt's A Trap!"),  DisplayLore = {"§7The next enemy to enter your base will", "§7receive blindness and slowness!"}, 
+                                         CostLore = "Cost: 1 Diamond", Cost = cItem(E_ITEM_DIAMOND, 1, 0, "")}
+                                 };
+                                 
+                          [20] = {UpgradeType = "MiningFatigue";
+                                  MaxTier = 1;
+                                  [1] = {DisplayItem = cItem(E_ITEM_IRON_PICKAXE, 1, 0, "", "§aMining Fatigue"),  DisplayLore = {"§7The next enemy to enter your base will", "§7Mining Fatigue!"}, 
+                                         CostLore = "Cost: 3 Diamond", Cost = cItem(E_ITEM_DIAMOND, 3, 0, "")}
+                                 };
                           
-                          
-                          
+                          [21] = {UpgradeType = "HealPool";
+                                  MaxTier = 1;
+                                  [1] = {DisplayItem = cItem(E_BLOCK_BEACON, 1, 0, "", "§aHeal Pool"),  DisplayLore = {"§7Allied players near your bed", "§7will be given regeneration!"}, 
+                                         CostLore = "Cost: 3 Diamond", Cost = cItem(E_ITEM_DIAMOND, 3, 0, "")}
+                                 }
                           
                           }
   
   for i, Upgrade in next, TeamShopContents do -- Sets up table with display items in slot
     
-    local Item
-    local Tier
-    local DisplayTier
+      -- Tier of upgrade the player already has
+    local Tier = Player:GetTeam().Upgrades[Upgrade.UpgradeType]
+      -- Tier of upgrade the shop will shop to them
+    local DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
     
-    if Upgrade.UpgradeType == "Effects" then
-      Tier = Player:GetTeam().Upgrades.Effects[Upgrade.EffectType]
-      DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
       
-      Item = Upgrade[DisplayTier].DisplayItem
-    else
-      Tier = Player:GetTeam().Upgrades[Upgrade.UpgradeType]
-      DisplayTier = math.max(Tier + 1, Upgrade.MaxTier)
-      
-      Item = Upgrade[DisplayTier].DisplayItem
-    end
+    local Item = Upgrade[DisplayTier].DisplayItem
+    
     
     Item.m_LoreTable = Upgrade[DisplayTier].DisplayLore -- sticks lore table on from array 
     table.insert(Item.m_LoreTable, Upgrade.CostLore)
@@ -130,9 +140,16 @@ function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedIt
     return true
   end
   
-  if ClickedItem.m_ItemType == E_BLOCK_FURNACE then
-    
+  local UpgradeBuying = TeamShopContents[SlotNum]
+  
+    -- find the current tier of the upgrade
+  local Tier = Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType]
+  
+  if Tier >= UpgradeBuying.MaxTier then
+    Player:SendMessage("§6Upgrade already bought!")
+    return true
   end
+  
   
   
   
