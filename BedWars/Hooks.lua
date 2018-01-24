@@ -14,6 +14,12 @@ function BindHooks()
   cPluginManager:AddHook(cPluginManager.HOOK_WORLD_TICK, OnWorldTick)
   cPluginManager:AddHook(cPluginManager.HOOK_PROJECTILE_HIT_BLOCK, OnProjectileHitBlock)
   cPluginManager:AddHook(cPluginManager.HOOK_PROJECTILE_HIT_ENTITY, OnProjectileHitEntity)
+  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_EATING, OnPlayerEating)
+    -- Gee we're lucky none of these have clashed actually  
+  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_TOSSING_ITEM, OnPlayerTossingItem)
+  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_RIGHT_CLICKING_ENTITY, OnPlayerRightClickingEntity)
+  cPluginManager:AddHook(cPluginManager.HOOK_SPAWNING_ENTITY, OnSpawningEntity)
+  
   
 end
 
@@ -45,7 +51,6 @@ function OnKilling(victim, killer, info)
     vic_team = nil
   end
 end
-
 
 function OnPlayerPlacingBlock(Player, BlockX, BlockY, BlockZ, BlockType, BlockMeta)
   if BlockType == E_BLOCK_TNT then 
@@ -119,8 +124,6 @@ function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, C
   return false
 end
 
-
-
 function OnProjectileHitBlock(ProjectileEntity, BlockX, BlockY, BlockZ, BlockFace, BlockHitPos)
   local World = ProjectileEntity:GetWorld() 
   local ThrowerID = ProjectileEntity:GetCreatorUniqueID() -- ID of the thrower
@@ -139,14 +142,15 @@ function OnProjectileHitBlock(ProjectileEntity, BlockX, BlockY, BlockZ, BlockFac
 
 end
 
-
 function OnProjectileHitEntity(ProjectileEntity, Entity)
   
 end
 
 function OnWorldTick (World, TimeDelta)
+
   SpawnItemClock(TimeDelta) -- This is Nem's
-  TickSpawnedMobs(World)
+  TickSpawnedMobs(World) -- Items.Lua
+  
   return
 end
 
@@ -209,3 +213,56 @@ function OnPlayerBreakingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockT
     return CheckBlock(BlockX, BlockY, BlockZ)--Checks if the piece was in the OG world
   end
 end
+function OnPlayerEating(Player)
+  
+  if Player:GetInventory():GetEquippedItem().m_ItemType == E_ITEM_POTION then
+    DrinkCustomPotion(Player) -- Items.lua
+  end
+  
+end
+
+function OnPlayerRightClickingEntity(Player, Entity)
+  if Entity:IsMob() == false then
+    return false
+  end
+
+  if Entity:GetMobType() == mtVillager and Entity:GetCustomName() == "§e§lItem Shop" then
+    OpenShop(Player) -- Shop.lua
+  end
+end
+
+function OnPlayerTossingItem(Player)  ---We don't want players exchanging armor. This doesn't actually prevent items from being dropped through the inventory window, only hotbar
+                                      ---This means that we'll have to just delete the item if they toss it... 
+  if Player:GetGameMode() ~= eGameMode_Survival then -- If they aren't in survival mode then let them toss the item.
+    return false -- Lets them toss item
+  end
+
+  
+  if TransferableItemsArray[Player:GetDraggingItem().m_ItemType] == false then -- Is it in the list of nontransferable items?
+
+    return true -- If so, cancel the action.
+  end
+  
+  if TransferableItemsArray[Player:GetEquippedItem().m_ItemType] == false then 
+    return true
+  end
+  
+  return false
+end
+
+function OnSpawningEntity(World, Entity) --- Trying to delete the item if they manage to actually toss it!
+  if Entity:IsPickup() then
+    if TransferableItemsArray[Entity:GetItem().m_ItemType] == false then
+      return true
+    else
+      return false
+    end
+  end
+  return false
+end
+
+
+
+
+
+

@@ -14,16 +14,8 @@ function InitializeShop()
                             --Shears
                             [359] = false
                             }
- 
   
 
-                
-  
-  
-  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_TOSSING_ITEM, OnPlayerTossingItem)
-  cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_RIGHT_CLICKING_ENTITY, OnPlayerRightClickingEntity)
-  cPluginManager:AddHook(cPluginManager.HOOK_SPAWNING_ENTITY, OnSpawningEntity)
-  
   cPluginManager.BindCommand("/shop", "", ShopCommand, " ~ /Shop <item>")
   cPluginManager.BindCommand("/resetarmor", "", ResetArmorCommand, "/resetarmor")
   ItemShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Item Shop")
@@ -32,16 +24,14 @@ function InitializeShop()
   return true
 end
 
+  -- Debugging Command
 function ResetArmorCommand (Split, Player)
   --Player:SendMessage(ItemToFullString(Player:GetInventory():GetEquippedItem()))
   Player:GetInventory():AddItem(ArmorArray[0][1])
   Player:GetInventory():AddItem(ArmorArray[0][2])
   Player.ArmorTier = 0
-  
   return true
 end
-
-
 
 function ShopCommand(Split, Player)
   
@@ -67,53 +57,13 @@ function ShopCommand(Split, Player)
   
 end
 
-function OnPlayerRightClickingEntity(Player, Entity)
-  
-  
-  
-  if Entity:IsMob() == false then
-    return false
-  end
 
-  if Entity:GetMobType() == mtVillager and Entity:GetCustomName() == "§e§lItem Shop" then
-  
-    ItemShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Item Shop")
-    ResetItemShopWindow(Player, ItemShopWindow)
-    ItemShopWindow:SetOnClicked(ItemShopClickedCallback)
-    Player:OpenWindow(ItemShopWindow)
-    Player:SendMessage("Shop Opened!")
-  
-  end
-end
-
-function OnPlayerTossingItem(Player)  ---We don't want players exchanging armor. This doesn't actually prevent items from being dropped through the inventory window, only hotbar
-                                      ---This means that we'll have to just delete the item if they toss it... 
-  if Player:GetGameMode() ~= eGameMode_Survival then -- If they aren't in survival mode then let them toss the item.
-    return false -- Lets them toss item
-  end
-
-  
-  if TransferableItemsArray[Player:GetDraggingItem().m_ItemType] == false then -- Is it in the list of nontransferable items?
-
-    return true -- If so, cancel the action.
-  end
-  
-  if TransferableItemsArray[Player:GetEquippedItem().m_ItemType] == false then 
-    return true
-  end
-  
-  return false
-end
-
-function OnSpawningEntity(World, Entity) --- Trying to delete the item if they manage to actually toss it!
-  if Entity:IsPickup() then
-    if TransferableItemsArray[Entity:GetItem().m_ItemType] == false then
-      return true
-    else
-      return false
-    end
-  end
-  return false
+function OpenShop()
+  ItemShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Item Shop")
+  ResetItemShopWindow(Player, ItemShopWindow)
+  ItemShopWindow:SetOnClicked(ItemShopClickedCallback)
+  Player:OpenWindow(ItemShopWindow)
+  Player:SendMessage("Shop Opened!")
 end
 
 
@@ -239,7 +189,6 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
   
   return true
 end
-
 
 function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, ClickedItem)
 
@@ -369,7 +318,7 @@ function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, C
   return true
 end
 
-
+  -- Sets the shop window back to the main
 function ResetItemShopWindow(Player, Window)
 
   for i=0, 35, 1 do--Clears any previous items
