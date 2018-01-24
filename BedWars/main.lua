@@ -79,6 +79,8 @@ end
 
 function OnDisable()
   LOG(PLUGIN:GetName() .. " is shutting down...")
+  
+  SaveArenas() -- Storage.lua 
 end
 
       
