@@ -16,17 +16,11 @@ function Initialize(Plugin)
     -- Hooks
   BindHooks()
   
-
-  
-  
     -- Vars
   PLUGIN = Plugin
   
-  Arena = cRoot:Get():GetWorld('Svamp') -- TODO figure out how to let people select the world properly and de-hardcode
-  ArenaOriginal = cRoot:Get():GetWorld('SvampOriginal')
-  
-  
-  
+  Arena = cRoot:Get():GetWorld(WorldName) -- TODO figure out how to let people select the world properly and de-hardcode
+  ArenaOriginal = cRoot:Get():GetWorld(WorldNameOriginal)
   
   Board = Arena:GetScoreBoard() 
   Board:RegisterTeam('Red', 'Red', 'Red', '')
@@ -35,14 +29,13 @@ function Initialize(Plugin)
   RedTeam = Board:GetTeam('Red')
   BlueTeam:Reset()
   RedTeam:Reset()
-  RedSpawn = {x = 7, y = 42, z = -76}
-  BlueSpawn = {x = -5, y = 42, z = 74}
-  RedBedCoords = {x = 1, y = 41, z = -69}
-  BlueBedCoords = {x = 1, y = 41, z = 67}
+  
   RedAmount = 0
   BlueAmount = 0
+  
   BlueBed = true
   RedBed = true
+  
   Time = nil
   TimeMil = 0
   GameStarted = nil
