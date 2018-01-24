@@ -20,7 +20,6 @@ function BindHooks()
   cPluginManager:AddHook(cPluginManager.HOOK_PLAYER_RIGHT_CLICKING_ENTITY, OnPlayerRightClickingEntity)
   cPluginManager:AddHook(cPluginManager.HOOK_SPAWNING_ENTITY, OnSpawningEntity)
   
-  
 end
 
 function OnKilling(victim, killer, info)
@@ -197,6 +196,10 @@ function OnPlayerRightClickingEntity(Player, Entity)
 
   if Entity:GetMobType() == mtVillager and Entity:GetCustomName() == "§e§lItem Shop" then
     OpenShop(Player) -- Shop.lua
+  end
+  
+  if Entity:GetMobType() == mtVillager and Entity:GetCustomName() == "§e§lTeam Shop" then
+    OpenTeamShop(Player) -- TeamShop.lua
   end
 end
 

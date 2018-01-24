@@ -1,3 +1,4 @@
+-- TODO Burn this code
 
 function InitializeShop()
   
@@ -40,7 +41,6 @@ function ShopCommand(Split, Player)
     local MobID = Player:GetWorld():SpawnMob(Player:GetPosX(), Player:GetPosY(), Player:GetPosZ(), mtVillager) -- initialises Variable and spawns villager
     local World = Player:GetWorld()
     
-    
     --give shop some characteristics
     
     Player:GetWorld():DoWithEntityByID(MobID,
@@ -51,6 +51,23 @@ function ShopCommand(Split, Player)
       end)
     
     return true
+  end
+  
+  if Split[2] == "team" then
+    local MobID = Player:GetWorld():SpawnMob(Player:GetPosX(), Player:GetPosY(), Player:GetPosZ(), mtVillager) -- initialises Variable and spawns villager
+    local World = Player:GetWorld()
+    
+    --give shop some characteristics
+    
+    Player:GetWorld():DoWithEntityByID(MobID,
+      function(Entity)
+        Entity:SetRelativeWalkSpeed(0)
+        Entity:SetCustomName("§e§lTeam Shop")
+        Entity:SetCustomNameAlwaysVisible(true)
+      end)
+    
+    return true
+  
   end
   
   return false
