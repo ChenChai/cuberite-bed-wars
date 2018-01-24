@@ -60,7 +60,16 @@ function TickSpawnedMobs(World)
   return
 end
   
-function DrinkCustomPotion(Player)
+function DrinkCustomPotion(Player) -- TODO Make these global
+  for i, value in next, { [10] = {cItem(373, 1, 0, "", "§rPotion of Invisibility"), {"Invisibility", "30 Seconds", "", cEntityEffect.effInvisibility, 30, 0}, "Cost: 1 Emerald", 1, 388};
+                          [11] = {cItem(373, 1, 0, "", "§rPotion of Speed"),        {"Speed II", "45 Seconds"    , "", cEntityEffect.effSpeed, 45, 1       }, "Cost: 1 Emerald", 1, 388};
+                          [12] = {cItem(373, 1, 0, "", "§rPotion of Leaping"),      {"Jump Boost V", "45 Seconds", "", cEntityEffect.effJumpBoost, 45, 4   }, "Cost: 1 Emerald", 1, 388}
+                          } do
+    if Player:GetInventory():GetEquippedItem().m_CustomName == value[1].m_CustomName then
+      Player:AddEntityEffect(value[2][3], value[2][4], value[2][5])
+    end
+  end
+  
   
 end
 function PlaceInstantTNT(Player, BlockX, BlockY, BlockZ)
