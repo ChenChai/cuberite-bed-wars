@@ -36,6 +36,21 @@ function Initialize(Plugin)
   BlueBed = true
   RedBed = true
   
+  RedTeam.Upgrades = {  ["ForgeTier"] = 0;
+                        ["ManiacMiner"] = 0;
+                        ["SharpenedSwords"] = 0;
+                        ["ReinforcedArmor"] = 0;
+                        ["ItsATrap"] = 0;
+                        ["MiningFatigue"] = 0;
+                        ["HealPool"] = 0}
+  BlueTeam.Upgrades = { ["ForgeTier"] = 0;
+                        ["ManiacMiner"] = 0;
+                        ["SharpenedSwords"] = 0;
+                        ["ReinforcedArmor"] = 0;
+                        ["ItsATrap"] = 0;
+                        ["MiningFatigue"] = 0;
+                        ["HealPool"] = 0}
+                      
   Time = nil
   TimeMil = 0
   GameStarted = nil
