@@ -256,8 +256,11 @@ function Respawn(player, x, y, z)
   
   -- See Utilities.lua for add item color; it takes RGB values and colors the armor with that
   
-  local ArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color), AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color),
-                      AddItemColor(ArmorArray[armor][1], player:GetTeam().Color), AddItemColor(ArmorArray[armor][2], player:GetTeam().Color)}
+  local ArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color), 
+                      AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color),
+                      AddItemColor(ArmorArray[armor][1], player:GetTeam().Color), 
+                      AddItemColor(ArmorArray[armor][2], player:GetTeam().Color)
+                      }
   
   for i, value in next, ArmorArray do
     if player:GetTeam() ~= nil and player:GetTeam().Upgrades.ReinforcedArmor > 0 then

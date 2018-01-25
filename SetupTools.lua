@@ -12,6 +12,8 @@ function InitializeSetupTools()
                       ["§1Set Blue Team Spawn"] = {ToolItem = cItem(E_BLOCK_WOOL, 1, E_META_WOOL_BLUE, "", "§1Set Blue Team Spawn"), ToolLore = {"§7Place this bed to set the starting spawn location!"}, 
                              SetVariable = "BlueSpawn", ConfirmMessage = "§1Blue team spawn set!", KeepBlock = false}
                       
+                      
+                      
                       }
   
   cPluginManager.BindCommand("/tools", "", ToolsCommand, " ~ /tools <give/delete>")

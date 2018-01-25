@@ -39,8 +39,15 @@ function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedIt
   if Player:GetInventory():HasItems(UpgradeBuying[DisplayTier].Cost) then-- Check if player has resources
     Player:GetInventory():RemoveItem(UpgradeBuying[DisplayTier].Cost) -- removes resources from their inventory
     Player:SendMessage("Upgrade bought!")
-    
+
     Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType] = DisplayTier
+    
+    if UpgradeBuying.UpgradeType == "ManiacMiner" then
+      Player:GetWorld():ForEachPlayer(function(WorldPlayer)
+                                        ApplyManiacMiner(WorldPlayer)
+                                      end)      
+    end
+    
     ResetTeamShopWindow(Player, Window)
     return true
   else
@@ -51,6 +58,16 @@ function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedIt
   return true
 end
 
+function ApplyManiacMiner(Player)
+  if Player:GetTeam() == nil then return end
+  local Tier = Player:GetTeam().Upgrades.ManiacMiner
+  if Tier == 0 then return end
+    -- Potion I is actually zero
+  LOG("Applying haste ".. Tier - 1 ..  " to" .. Player:GetName())
+  Player:AddEntityEffect(cEntityEffect.effHaste, 50000, Tier - 1, 1)
+  
+  return
+end
 function ResetTeamShopWindow(Player, Window)
 
   for i=0, 35, 1 do--Clears any previous items
