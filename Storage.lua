@@ -3,12 +3,12 @@
 function SaveArena()
   local IniFile = cIniFile()
   
-  for i, value in next, SpawnLocationArray do
+  for i, value in next, LocationArray do
     
-    if (SpawnLocationArray[i].z ~= nil) then
-      IniFile:SetValueI(i, "x", SpawnLocationArray[i].x)
-      IniFile:SetValueI(i, "y", SpawnLocationArray[i].y)
-      IniFile:SetValueI(i, "z", SpawnLocationArray[i].z)
+    if (LocationArray[i].z ~= nil) then
+      IniFile:SetValueI(i, "x", LocationArray[i].x)
+      IniFile:SetValueI(i, "y", LocationArray[i].y)
+      IniFile:SetValueI(i, "z", LocationArray[i].z)
     end
   end
   
@@ -22,10 +22,10 @@ function LoadArena()
   local IniFile = cIniFile()
   IniFile:ReadFile(cPluginManager:Get():GetCurrentPlugin():GetLocalFolder() .. "/ArenaSaveData.ini")
   
-    -- loop through each of the keys and each of the values in each of the keys, writing to the SpawnLocationArray
+    -- loop through each of the keys and each of the values in each of the keys, writing to the LocationArray
   for k = 0, IniFile:GetNumKeys() - 1 do
     for v = 0, IniFile:GetNumValues(k) - 1 do
-      SpawnLocationArray[IniFile:GetKeyName(k)][IniFile:GetValueName(k, v)] = IniFile:GetValue(k, v)
+      LocationArray[IniFile:GetKeyName(k)][IniFile:GetValueName(k, v)] = IniFile:GetValue(k, v)
     end
     
   end

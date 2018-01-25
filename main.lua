@@ -56,9 +56,9 @@ function Initialize(Plugin)
   TimeMil = 0
   GameStarted = nil
   
-    -- Recalls data from ArenaSaveData file and writes to this SpawnLocationArray; see Storage.lua
+    -- Recalls data from ArenaSaveData file and writes to this LocationArray; see Storage.lua
     -- for now it's just initialized to hardcoded values from above, later will be more malleable
-  SpawnLocationArray = {["RedSpawn"] = RedSpawn, ["BlueSpawn"] = BlueSpawn, ["RedBedCoords"] = RedBedCoords, ["BlueBedCoords"] = BlueBedCoords}
+  LocationArray = {["RedSpawn"] = RedSpawn, ["BlueSpawn"] = BlueSpawn, ["RedBedCoords"] = RedBedCoords, ["BlueBedCoords"] = BlueBedCoords}
   LoadArena() -- Storage.lua
   
    -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}

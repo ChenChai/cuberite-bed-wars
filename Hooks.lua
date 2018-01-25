@@ -68,9 +68,14 @@ function OnPlayerPlacingBlock(Player, BlockX, BlockY, BlockZ, BlockType, BlockMe
   end
   
   if Item.m_CustomName == ToolUsed.ToolItem.m_CustomName then
-    SpawnLocationArray[ToolUsed.SetVariable] = {x = BlockX, y = BlockY, z = BlockZ}
+    LocationArray[ToolUsed.SetVariable] = {x = BlockX, y = BlockY, z = BlockZ}
     Player:SendMessage(ToolUsed.ConfirmMessage)
-    return false
+    
+    if ToolUsed.KeepBlock == true then
+      return false
+    else
+      return true
+    end
   end
   
 end
