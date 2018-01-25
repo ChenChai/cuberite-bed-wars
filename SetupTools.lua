@@ -1,21 +1,33 @@
 function InitializeSetupTools()
   
-  SetupToolsArray = { ["§4Set Red Team Bed"] = {ToolItem = cItem(E_ITEM_BED, 1, 0, "", "§4Set Red Team Bed"), ToolLore = {"§7Place this bed to set the starting bed location!"}, 
+  SetupToolsArray = { ["§4Set Red Team Bed"] = {ToolItem = cItem(E_ITEM_BED, 1, E_META_WOOL_RED, "", "§4Set Red Team Bed"), ToolLore = {"§7Place this bed to set the starting bed location!"}, 
                              SetVariable = "RedBedCoords", ConfirmMessage = "§4Red team bed set!", KeepBlock = true};
                              
-                      ["§1Set Blue Team Bed"] = {ToolItem = cItem(E_ITEM_BED, 1, 0, "", "§1Set Blue Team Bed"), ToolLore = {"§7Place this bed to set the starting bed location!"}, 
+                      ["§1Set Blue Team Bed"] = {ToolItem = cItem(E_ITEM_BED, 1, E_META_WOOL_BLUE, "", "§1Set Blue Team Bed"), ToolLore = {"§7Place this bed to set the starting bed location!"}, 
                              SetVariable = "BlueBedCoords", ConfirmMessage = "§1Blue team bed set!", KeepBlock = true};
                       
                       ["§4Set Red Team Spawn"] = {ToolItem = cItem(E_BLOCK_WOOL, 1, E_META_WOOL_RED, "", "§4Set Red Team Spawn"), ToolLore = {"§7Place this block to set the starting spawn location!"}, 
                              SetVariable = "RedSpawn", ConfirmMessage = "§4Red team spawn set!", KeepBlock = false};
                       
-                      ["§1Set Blue Team Spawn"] = {ToolItem = cItem(E_BLOCK_WOOL, 1, 0, "", "§1Set Blue Team Spawn"), ToolLore = {"§7Place this bed to set the starting spawn location!"}, 
+                      ["§1Set Blue Team Spawn"] = {ToolItem = cItem(E_BLOCK_WOOL, 1, E_META_WOOL_BLUE, "", "§1Set Blue Team Spawn"), ToolLore = {"§7Place this bed to set the starting spawn location!"}, 
                              SetVariable = "BlueSpawn", ConfirmMessage = "§1Blue team spawn set!", KeepBlock = false}
                       
                       }
   
   cPluginManager.BindCommand("/tools", "", ToolsCommand, " ~ /tools <give/delete>")
+  cPluginManager.BindCommand("/test", "", TestCommand, "/test")
+  
 end
+
+function TestCommand(Split, Player)
+  
+  local Item = cItem(E_ITEM_DIAMOND_LEGGINGS, 1, 0, "")
+  Item.m_ItemColor = cColor(255, 0, 0)
+  Player:GetInventory():AddItem(Item)
+  return true
+  
+end
+
 
 function ToolsCommand(Split, Player)
   

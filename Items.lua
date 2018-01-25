@@ -110,7 +110,11 @@ function ThrowBridgeEgg(Player)
         if Entity:GetProjectileKind() == cProjectileEntity.pkEgg and Entity.BridgeEggActivated ~= true then
            EggID = Entity:GetUniqueID()
            Entity.BridgeEggActivated = true
-           ScheduleEggBlockSet(Entity)
+           
+           local Color 
+           if Player:GetTeam() == nil then Color = E_META_WOOL_WHITE else Color = Player:GetTeam().WoolColor end
+           
+           ScheduleEggBlockSet(Entity, Color)
        
         end
       end
@@ -122,9 +126,11 @@ function ThrowBridgeEgg(Player)
 end
 
   -- Schedules the egg to start setting wool blocks
-function ScheduleEggBlockSet(Entity)
+function ScheduleEggBlockSet(Entity, Color)
   local World = Entity:GetWorld()
   local EggID = Entity:GetUniqueID()
+  
+  if Color == nil then Color = E_META_DYE_WHITE end
   
   for i=1,70,1 do -- constantly setting blocks for like 70 ticks
   
@@ -139,19 +145,19 @@ function ScheduleEggBlockSet(Entity)
         
         World:ScheduleTask(3, function(World)  
           if World:GetBlock(PX, PY, PZ) == 0 then -- Checking if the block is air
-            World:SetBlock(PX, PY, PZ, 35, 1, true) --Set wool block at the egg position
+            World:SetBlock(PX, PY, PZ, 35, Color, true) --Set wool block at the egg position
           end
           if World:GetBlock(PX, PY - 1, PZ) == 0 then
-            World:SetBlock(PX, PY - 1, PZ, 35, 1, true)
+            World:SetBlock(PX, PY - 1, PZ, 35, Color, true)
           end
           if World:GetBlock(PX + 1, PY, PZ) == 0 then
-            World:SetBlock(PX + 1, PY, PZ, 35, 1, true)
+            World:SetBlock(PX + 1, PY, PZ, 35, Color, true)
           end
           if World:GetBlock(PX, PY, PZ + 1) == 0 then
-            World:SetBlock(PX, PY, PZ + 1, 35, 1, true)
+            World:SetBlock(PX, PY, PZ + 1, 35, Color, true)
           end
           if World:GetBlock(PX + 1, PY, PZ + 1) == 0 then
-            World:SetBlock(PX + 1, PY, PZ + 1, 35, 1, true)
+            World:SetBlock(PX + 1, PY, PZ + 1, 35, Color, true)
           end
           
         end)

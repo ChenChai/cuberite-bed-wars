@@ -69,7 +69,7 @@ function ResetTeamShopWindow(Player, Window)
                                   [3] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aEmerald Forge"), DisplayLore = {"§7Activates the Emerald spawner", "§7in your team's Forge!" }, 
                                          CostLore = "Cost: 12 Diamond", Cost = cItem(E_ITEM_DIAMOND, 12, 0, "")};
                                          
-                                  [4] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aGold Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron, gold, and emerald by 200%!" }, 
+                                  [4] = {DisplayItem = cItem(E_BLOCK_FURNACE, 1, 0, "", "§aMolten Forge"),    DisplayLore = {"§7Increases the spawn rate of", "§7iron, gold, and emerald by 200%!" }, 
                                          CostLore = "Cost: 16 Emerald", Cost = cItem(E_ITEM_DIAMOND, 16, 0, "")}
                                   };
                                   

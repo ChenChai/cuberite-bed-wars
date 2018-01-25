@@ -97,6 +97,9 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
     return true
   end
   
+  local WoolColor 
+  if Player:GetTeam() == nil then WoolColor = E_META_WOOL_WHITE else WoolColor = Player:GetTeam().WoolColor end
+  
   
   ------ The Shop Stock
   if a_ClickedItem.m_ItemType == 46 then --Checks if you're clicking on Utility Items TNT
@@ -126,7 +129,7 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
   
   if a_ClickedItem.m_ItemType == 172 then
     ItemShopWindow:SetWindowTitle("Blocks")
-    ItemCategoryArray = { [10] = {cItem(35, 16, 0, "", "§rWool")                ,{                                                                               } , "Cost: 4 Iron", 4, 265},
+    ItemCategoryArray = { [10] = {cItem(35, 16, WoolColor, "", "§rWool")                ,{                                                                               } , "Cost: 4 Iron", 4, 265},
                           [11] = {cItem(172, 16, 0, "", "§rHardened Clay")      ,{                                                                               } , "Cost: 12 Iron", 12, 265},
                           [12] = {cItem(20, 4, 0, "", "§rBlast-Proof Glass")    ,{                                                                               } , "Cost: 12 Iron", 12, 265},
                           [13] = {cItem(121, 12, 0, "", "§rEnd Stone")          ,{                                                                               } , "Cost: 24 Iron", 24, 265},

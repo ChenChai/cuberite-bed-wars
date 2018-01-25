@@ -30,6 +30,13 @@ function Initialize(Plugin)
   RedTeam = Board:GetTeam('Red')
   BlueTeam:Reset()
   RedTeam:Reset()
+  BlueTeam.WoolColor = E_META_WOOL_BLUE
+  RedTeam.WoolColor = E_META_WOOL_RED
+  
+    -- cColor objects can be attached to armor!
+  BlueTeam.Color = cColor(0, 0, 255)
+  RedTeam.Color = cColor(255, 0, 0)
+  
   
   RedAmount = 0
   BlueAmount = 0
@@ -69,7 +76,6 @@ function Initialize(Plugin)
                 }
                 
                 --the arrays in this array are structured after the ItemCategoryArrays later, which list the items you buy and the prices.
-                --They should still give you the same item that Mac's main plugin works with though.
   PickArray =  { [0] = {cItem()},
                  [1] = {cItem(E_ITEM_WOODEN_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),     {}, "Cost: 10 Iron", 10, 265};
                  [2] = {cItem(E_ITEM_STONE_PICKAXE, 1, 0, "unbreaking=10;efficiency=1", ""),      {}, "Cost: 10 Iron", 10, 265};
@@ -245,10 +251,12 @@ function Respawn(player, x, y, z)
   inv:Clear()
   
   -- Gib Armors ploz
-  inv:SetArmorSlot(0, cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"))
-  inv:SetArmorSlot(1, cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"))
-  inv:SetArmorSlot(2, ArmorArray[armor][1])
-  inv:SetArmorSlot(3, ArmorArray[armor][2])
+  
+  -- See Utilities.lua for add item color; it takes RGB values and colors the armor with that
+  inv:SetArmorSlot(0, AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color))
+  inv:SetArmorSlot(1, AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color))
+  inv:SetArmorSlot(2, AddItemColor(ArmorArray[armor][1], player:GetTeam().Color))
+  inv:SetArmorSlot(3, AddItemColor(ArmorArray[armor][2], player:GetTeam().Color))
   -- Gib Pick
   inv:SetHotbarSlot(1, PickArray[pick][1])
   --Gib Axe
