@@ -122,8 +122,13 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
                           [11] = {cItem(267, 1, 0, "", "§rIron Sword")         ,{                                                                                } , "Cost: 7 Gold", 7, 266},
                           [12] = {cItem(276, 1, 0, "", "§rDiamond Sword")      ,{                                                                                } , "Cost: 4 Emerald", 4, 388},
                           [13] = {cItem(280, 1, 0, "knockback=1", "§rStick")   ,{                                                                                } , "Cost: 10 Gold", 10, 266},
-                          --"knockback=1" assigns the enchantment
                           }
+    for i, value in next, ItemCategoryArray do
+      if Player:GetTeam().Upgrades.SharpenedSwords > 0 then
+        value[1]:AddEnchantment(cEnchantments.enchSharpness, Player:GetTeam().Upgrades.SharpenedSwords, false)
+      end
+    end
+    
   end
   
   
