@@ -124,7 +124,7 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
                           [13] = {cItem(280, 1, 0, "knockback=1", "§rStick")   ,{                                                                                } , "Cost: 10 Gold", 10, 266},
                           }
     for i, value in next, ItemCategoryArray do
-      if Player:GetTeam().Upgrades.SharpenedSwords > 0 then
+      if Player:GetTeam() ~= nil and Player:GetTeam().Upgrades.SharpenedSwords > 0 then
         value[1]:AddEnchantment(cEnchantments.enchSharpness, Player:GetTeam().Upgrades.SharpenedSwords, false)
       end
     end
@@ -167,6 +167,13 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
                         [11] = {cItem(309, 1, 0, "", "§rPermanent Iron Armor"),      {"Leggings and Boots", "Not lost on death!"}, "Cost: 12 Gold", 12, 266, 2},
                         [12] = {cItem(313, 1, 0, "", "§rPermanent Diamond Armor"),   {"Leggings and Boots", "Not lost on death!"}, "Cost: 6 Emerald", 6, 388, 3},
                         }
+    
+    for i, value in next, ItemCategoryArray do
+      if Player:GetTeam() ~= nil and Player:GetTeam().Upgrades.ReinforcedArmor > 0 then
+        value[1]:AddEnchantment(cEnchantments.enchProtection, Player:GetTeam().Upgrades.ReinforcedArmor, false)
+      end
+    end
+                        
   end
   
   if a_ClickedItem.m_ItemType == 373 then -- Checks if it's a potion

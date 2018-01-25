@@ -21,9 +21,7 @@ end
 
 function TestCommand(Split, Player)
   
-  local Item = cItem(E_ITEM_DIAMOND_LEGGINGS, 1, 0, "")
-  Item.m_ItemColor = cColor(255, 0, 0)
-  Player:GetInventory():AddItem(Item)
+  Player:SendMessage(5 % 2)
   return true
   
 end

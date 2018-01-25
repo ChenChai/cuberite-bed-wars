@@ -253,10 +253,20 @@ function Respawn(player, x, y, z)
   -- Gib Armors ploz
   
   -- See Utilities.lua for add item color; it takes RGB values and colors the armor with that
-  inv:SetArmorSlot(0, AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color))
-  inv:SetArmorSlot(1, AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color))
-  inv:SetArmorSlot(2, AddItemColor(ArmorArray[armor][1], player:GetTeam().Color))
-  inv:SetArmorSlot(3, AddItemColor(ArmorArray[armor][2], player:GetTeam().Color))
+  
+  local ArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color), AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color),
+                      AddItemColor(ArmorArray[armor][1], player:GetTeam().Color), AddItemColor(ArmorArray[armor][2], player:GetTeam().Color)}
+  
+  for i, value in next, ArmorArray do
+    if player:GetTeam() ~= nil and player:GetTeam().Upgrades.ReinforcedArmor > 0 then
+      value:AddEnchantment(cEnchantments.enchProtection, player:GetTeam().Upgrades.ReinforcedArmor, false)
+    end
+  end
+            
+  inv:SetArmorSlot(0, ArmorArray[1])
+  inv:SetArmorSlot(1, ArmorArray[2])
+  inv:SetArmorSlot(2, ArmorArray[3])
+  inv:SetArmorSlot(3, ArmorArray[4])
   -- Gib Pick
   inv:SetHotbarSlot(1, PickArray[pick][1])
   --Gib Axe
