@@ -9,6 +9,7 @@ function Initialize(Plugin)
   GetConfig()
   
     -- Basically set up all the hooks for the shop and items which are in separate files
+  InitTeams()
   InitializeShop()
   InitializeItems()
   InitPickupSpawn()
@@ -19,7 +20,10 @@ function Initialize(Plugin)
   
     -- Vars
   PLUGIN = Plugin
-  
+  return true
+end
+
+function InitTeams()
   Arena = cRoot:Get():GetWorld(WorldName) -- TODO figure out how to let people select the world properly and de-hardcode
   ArenaOriginal = cRoot:Get():GetWorld(WorldNameOriginal)
   
@@ -97,9 +101,7 @@ function Initialize(Plugin)
   cPluginManager.BindCommand("/join", "bedwars_main.join", JoinTeam, " ~ Lets you join a team. Enter 'red' or 'blue' after to specify a team")
   cPluginManager.BindCommand("/start", "bedwars_main.start", StartGame, " ~ Starts the match")
 
-  LOG("Initialised " .. Plugin:GetName() .. " v." .. Plugin:GetVersion())
-  
-  return true
+  LOG("Initialised Teams")
 end
 
 function OnDisable()

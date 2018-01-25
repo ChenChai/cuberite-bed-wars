@@ -24,31 +24,26 @@ end
 
 function OnKilling(victim, killer, info)
   if victim:GetClass() == 'cPlayer' then
-    UpdateScore()
-    Arena:BroadcastChat(victim:GetName() .. ' has been killed')
-    local team = victim:GetTeam()
-    if team then
-      local vic_team = team:GetName()
-    else
-      local vic_team = 'None'
-    end
-    if vic_team == 'Red' then
+    local Name = victim:GetName()
+    Arena:BroadcastChat(Name .. ' has been killed')
+    if RedTeam:HasPlayer(Name) then
       if RedBed == true then
         Respawn(victim, RedSpawn['x'], RedSpawn['y'], RedSpawn['z'])
       else
-        --finish him!!!
+        RedTeam:RemovePlayer(Name)
+        victim:SetGameMode(gmSpectator)
       end
-    elseif vic_team == 'Blue' then
+    elseif BlueTeam:HasPlayer(Name) then
       if BlueBed == true then
         Respawn(victim, BlueSpawn['x'], BlueSpawn['y'], BlueSpawn['z'])
       else
-        --finish him!!!
+        BlueTeam:RemovePlayer(Name)
+        victim:SetGameMode(gmSpectator)
       end
     else
       --Let em spectate
       victim:SetGameMode(gmSpectator)
     end
-    vic_team = nil
   end
 end
 
