@@ -25,7 +25,7 @@ end
 function OnKilling(victim, killer, info)
   if victim:GetClass() == 'cPlayer' then
     UpdateScore()
-    Svamp:BroadcastChat(victim:GetName() .. ' has been killed')
+    Arena:BroadcastChat(victim:GetName() .. ' has been killed')
     local team = victim:GetTeam()
     if team then
       local vic_team = team:GetName()
