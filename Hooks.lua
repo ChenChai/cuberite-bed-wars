@@ -163,6 +163,7 @@ function OnWorldTick(World, TimeDelta)
   SpawnItemClock(TimeDelta) -- goes to pickup spawn
   TickSpawnedMobs(World) -- Items.Lua
   Arena:ForEachPlayer(CheckIfInTrap) --goes to ItsATrap.lua
+  Arena:ForEachPlayer(CheckHealPool) -- HealPool.lua
   return
 end
 
