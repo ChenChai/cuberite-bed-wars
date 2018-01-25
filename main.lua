@@ -86,9 +86,6 @@ function OnDisable()
   SaveArena() -- Storage.lua 
 end
 
-      
-
-
 function JoinTeam(Split, Player)
   if Player:GetTeam() == nil then
     if Split[2] == 'red' then

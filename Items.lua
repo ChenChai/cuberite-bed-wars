@@ -69,8 +69,6 @@ function DrinkCustomPotion(Player) -- TODO Make these global
       Player:AddEntityEffect(value[2][3], value[2][4], value[2][5])
     end
   end
-  
-  
 end
 function PlaceInstantTNT(Player, BlockX, BlockY, BlockZ)
     Player:GetInventory():RemoveOneEquippedItem()
