@@ -53,13 +53,26 @@ function OnKilling(victim, killer, info)
 end
 
 function OnPlayerPlacingBlock(Player, BlockX, BlockY, BlockZ, BlockType, BlockMeta)
-  if BlockType == E_BLOCK_TNT then 
-      -- TODO figure out why TNT isn't removed from the inventory properly
+  if BlockType == E_BLOCK_TNT then
     PlaceInstantTNT(Player, BlockX, BlockY, BlockZ) -- See Items: Places primed tnt and removes it from player's inventory
-    
     return true
   end
-
+  
+  
+    -- Used for setup tools setting up the arena
+  local Item = Player:GetInventory():GetEquippedItem()
+  local ToolUsed = SetupToolsArray[Item.m_CustomName]
+  
+  if ToolUsed == nil then
+    return false
+  end
+  
+  if Item.m_CustomName == ToolUsed.ToolItem.m_CustomName then
+    SpawnLocationArray[ToolUsed.SetVariable] = {x = BlockX, y = BlockY, z = BlockZ}
+    Player:SendMessage(ToolUsed.ConfirmMessage)
+    return false
+  end
+  
 end
 
 function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, CursorY, CursorZ, BlockType, BlockMeta)

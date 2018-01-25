@@ -12,6 +12,7 @@ function Initialize(Plugin)
   InitializeShop()
   InitializeItems()
   InitPickupSpawn()
+  InitializeSetupTools()
     -- TODO make sure none of these hooks clash, maybe refactor all hook calls into a separate file?
     -- Hooks
   BindHooks()

@@ -4,31 +4,8 @@ function InitializeTeamShop()
 end
 
 function OpenTeamShop(Player)
-
-    -- Debugging only
-  if (RedTeam.Upgrades == nil) then
-    RedTeam.Upgrades = { 
-                         ["ForgeTier"] = 0;
-                         
-                         ["ManiacMiner"] = 0;
-                         
-                         ["SharpenedSwords"] = 0;
-                         ["ReinforcedArmor"] = 0;
-                         
-  
-                         ["ItsATrap"] = 0;
-                         ["MiningFatigue"] = 0;
-                         
-                         ["HealPool"] = 0
-                         
-                         
-                       }
-  Player:SetTeam(RedTeam)
-  end
-  
   TeamShopWindow = cLuaWindow(cWindow.wtChest, 9, 4, "Team Shop")
   ResetTeamShopWindow(Player, TeamShopWindow)
-  
   
   Player:OpenWindow(TeamShopWindow)
   Player:SendMessage("Shop Opened!")
@@ -169,5 +146,3 @@ function ResetTeamShopWindow(Player, Window)
   
   return Window
 end
-
-
