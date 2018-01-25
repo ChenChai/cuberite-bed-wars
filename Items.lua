@@ -33,12 +33,18 @@ end
   
   -- TODO Move this into a different file for organization
   -- This function updates the time left on Dream Defenders and Bedbugs
-function TickSpawnedMobs(World)
+function TickSpawnedMobs(World, TimeDelta)
   
   for i, value in next, DreamDefenderArray do
-    DreamDefenderArray[i].TimeLeft = DreamDefenderArray[i].TimeLeft - 1 -- Subtracts elapsed tick
+    DreamDefenderArray[i].TimeLeft = DreamDefenderArray[i].TimeLeft - TimeDelta -- Subtracts elapsed tick
     --updates name of Dream Defender, using health, name and time left.
     DreamDefenderArray[i]:SetCustomName("§c" .. DreamDefenderArray[i]:GetHealth() .." §9§lDream Defender §r§e" .. math.ceil(DreamDefenderArray[i].TimeLeft / 60) .. " s")
+    
+    -- Every few ticks, Dream defender searches for target
+    local SearchDistance = 10
+    local AttackDistance = 3
+    MobSearchForTarget(DreamDefenderArray[i], SearchDistance, AttackDistance) -- TeamMobAI.lua
+    
     
     if DreamDefenderArray[i].TimeLeft <= 0 then -- Removes the Dream Defender when its time runs out
       DreamDefenderArray[i]:TeleportToCoords(-100, -100, -100) 
@@ -47,7 +53,7 @@ function TickSpawnedMobs(World)
   end
   
   for i, value in next, BedbugArray do
-    BedbugArray[i].TimeLeft = BedbugArray[i].TimeLeft - 1 --Subtracts elapsed ticks from the duration remaining on the bedbug
+    BedbugArray[i].TimeLeft = BedbugArray[i].TimeLeft - TimeDelta --Subtracts elapsed ticks from the duration remaining on the bedbug
     --updates name of bedbug, using health, name and timeleft
     BedbugArray[i]:SetCustomName("§c" .. value:GetHealth() .. " Bedbug §r§e" .. math.ceil(BedbugArray[i].TimeLeft / 60) .. " s")
     
