@@ -4,7 +4,6 @@ function InitializeTeamShop()
 end
 
 function OpenTeamShop(Player)
-  
 
     -- Debugging only
   if (RedTeam.Upgrades == nil) then
@@ -34,7 +33,6 @@ function OpenTeamShop(Player)
   Player:OpenWindow(TeamShopWindow)
   Player:SendMessage("Shop Opened!")
 end
-
 
 function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedItem)
 
