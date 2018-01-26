@@ -40,23 +40,23 @@ function SpawnItemClock(TimeDelta)
         --EXECUTED EVERY SECOND
         
       --Events
-      if Time = 360
+      if Time == 360 then
         --Upgrade Diamond gen to lvl 2
         DiamondSpawnMax = 25
       end
-      if Time = 720 then
+      if Time == 720 then
         --Em Gen to lvl 2
         EmeraldSpawnMax = 60
       end
-      if Time = 1080 then
+      if Time == 1080 then
         --Dia to lvl 3
         DiamondSpawnMax = 20
       end
-      if Time = 1440 then
+      if Time == 1440 then
         --Em to lvl 3
         EmeraldSpawnMax = 55
       end
-      if Time = 1800 then
+      if Time == 1800 then
         --Destroy Beds
         RedBed = false
         BlueBed = false

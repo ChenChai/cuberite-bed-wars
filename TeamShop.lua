@@ -48,6 +48,12 @@ function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedIt
                                       end)      
     end
     
+    if UpgradeBuying.UpgradeType == "ReinforcedArmor" then
+      Player:GetWorld():ForEachPlayer(function(WorldPlayer)
+                                        ApplyReinforcedArmor(WorldPlayer)
+                                      end)
+    end
+    
     ResetTeamShopWindow(Player, Window)
     return true
   else
@@ -63,11 +69,27 @@ function ApplyManiacMiner(Player)
   local Tier = Player:GetTeam().Upgrades.ManiacMiner
   if Tier == 0 then return end
     -- Potion I is actually zero
-  LOG("Applying haste ".. Tier - 1 ..  " to" .. Player:GetName())
   Player:AddEntityEffect(cEntityEffect.effHaste, 50000, Tier - 1, 1)
   
   return
 end
+
+function ApplyReinforcedArmor(Player)
+  if Player:GetTeam() == nil then return end
+  if Player:GetTeam().Upgrades.ReinforcedArmor == 0 then return end
+  
+  for SlotNum = 0, 26 do
+    local Inventory = Player:GetInventory()
+    local Item = cItem(Inventory:GetInventorySlot(SlotNum))
+    Item:AddEnchantment(cEnchantments.enchProtection, Player:GetTeam().Upgrades.ReinforcedArmor, false)
+    Inventory:SetSlot(SlotNum, Item)
+  end
+  
+  
+  
+end
+
+
 function ResetTeamShopWindow(Player, Window)
 
   for i=0, 35, 1 do--Clears any previous items

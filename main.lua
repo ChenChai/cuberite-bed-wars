@@ -253,9 +253,9 @@ function Respawn(player, x, y, z)
   inv:Clear()
   
   -- Gib Armors ploz
+  LOG(player.ArmorTier)
   
   -- See Utilities.lua for add item color; it takes RGB values and colors the armor with that
-  
   local ArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color), 
                       AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color),
                       AddItemColor(ArmorArray[armor][1], player:GetTeam().Color), 

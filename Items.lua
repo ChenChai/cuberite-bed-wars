@@ -35,7 +35,17 @@ end
   -- This function updates the time left on Dream Defenders and Bedbugs
 function TickSpawnedMobs(World, TimeDelta)
   
+
+  
+  
   for i, value in next, DreamDefenderArray do
+    -- Removes the Dream Defender when its time runs out or it is dead
+    if DreamDefenderArray[i].TimeLeft <= 0 or DreamDefenderArray[i]:IsTicking() == false then 
+      DreamDefenderArray[i]:TeleportToCoords(-100, -100, -100) 
+      table.remove(DreamDefenderArray, i)
+    else
+  
+  
     DreamDefenderArray[i].TimeLeft = DreamDefenderArray[i].TimeLeft - TimeDelta -- Subtracts elapsed tick
     --updates name of Dream Defender, using health, name and time left.
     DreamDefenderArray[i]:SetCustomName("§c" .. DreamDefenderArray[i]:GetHealth() .." §9§lDream Defender §r§e" .. math.ceil(DreamDefenderArray[i].TimeLeft / 60) .. " s")
@@ -43,24 +53,27 @@ function TickSpawnedMobs(World, TimeDelta)
     -- Every few ticks, Dream defender searches for target
     local SearchDistance = 10
     local AttackDistance = 3
-    MobSearchForTarget(DreamDefenderArray[i], SearchDistance, AttackDistance) -- TeamMobAI.lua
-    
-    
-    if DreamDefenderArray[i].TimeLeft <= 0 then -- Removes the Dream Defender when its time runs out
-      DreamDefenderArray[i]:TeleportToCoords(-100, -100, -100) 
-      table.remove(DreamDefenderArray, i)
+    MobSearchForTarget(DreamDefenderArray[i], SearchDistance, AttackDistance, 8, 20) -- TeamMobAI.lua
     end
   end
   
   for i, value in next, BedbugArray do
+    
+    
+    if BedbugArray[i].TimeLeft <= 0 or BedbugArray[i]:IsTicking() == false then -- Removes the Bedbug when time runs out
+      BedbugArray[i]:TeleportToCoords(-100, -100, -100)
+      table.remove(BedbugArray, i) 
+    else
+    
     BedbugArray[i].TimeLeft = BedbugArray[i].TimeLeft - TimeDelta --Subtracts elapsed ticks from the duration remaining on the bedbug
     --updates name of bedbug, using health, name and timeleft
     BedbugArray[i]:SetCustomName("§c" .. value:GetHealth() .. " Bedbug §r§e" .. math.ceil(BedbugArray[i].TimeLeft / 60) .. " s")
     
-    if BedbugArray[i].TimeLeft <= 0 then -- Removes the Bedbug when time runs out
-      BedbugArray[i]:TeleportToCoords(-100, -100, -100)
-      table.remove(BedbugArray, i) 
+    local SearchDistance = 10
+    local AttackDistance = 2
+    MobSearchForTarget(BedbugArray[i], SearchDistance, AttackDistance, 2, 5) -- TeamMobAI.lua
     end
+
   end
   
   return

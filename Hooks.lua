@@ -25,7 +25,7 @@ end
 function OnKilling(victim, killer, info)
   if victim:GetClass() == 'cPlayer' then
     local Name = victim:GetName()
-    Arena:BroadcastChat(Name .. ' has been killed')
+    Arena:BroadcastChat(Name .. ' has been killed with ArmorTier = ' .. victim.ArmorTier)
     if RedTeam:HasPlayer(Name) then
       if RedBed == true then
         Respawn(victim, RedSpawn['x'], RedSpawn['y'], RedSpawn['z'])
@@ -116,7 +116,7 @@ function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, C
         Entity:SetCustomName("Dream Defender")
         Entity:SetCustomNameAlwaysVisible(true)
         Entity.TimeLeft = 12000
-        if Player:GetTeam() ~= nil then Entity.Team = Player:GetTeam() end -- Assigns the Dream Defender a team based on the thrower's team
+        if Player:GetTeam() ~= nil then Entity.TeamName = Player:GetTeam():GetName() end -- Assigns the Dream Defender a team based on the thrower's team
         table.insert(DreamDefenderArray, Entity)
       end)
     Player:GetInventory():RemoveOneEquippedItem() -- Takes a spawn egg away
@@ -198,6 +198,7 @@ end
 
 function OnPlayerBreakingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
   --Checks if a player has broken a bed block, and whos bed it is...
+  LOG("test")
   return BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta) --in main.lua
 end
 
