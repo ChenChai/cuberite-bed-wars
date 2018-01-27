@@ -18,6 +18,12 @@ function Initialize(Plugin)
     -- Hooks
   BindHooks()
   
+    -- Recalls data from ArenaSaveData file and writes to this LocationArray; see Storage.lua
+    -- for now it's just initialized to hardcoded values from above, later will be more malleable
+  LocationArray = {["BlueBedCoords"] = {x, y, z}, ["RedBedCoords"] = {x, y, z}, ["RedSpawn"] = {x, y, z}, ["BlueSpawn"] = {x, y, z}}
+  LoadArena() -- Storage.lua
+  
+  
     -- Vars
   PLUGIN = Plugin
   return true
@@ -72,10 +78,7 @@ function InitTeams()
   TimeMil = 0
   GameStarted = nil
   
-    -- Recalls data from ArenaSaveData file and writes to this LocationArray; see Storage.lua
-    -- for now it's just initialized to hardcoded values from above, later will be more malleable
-  LocationArray = {["RedSpawn"] = RedSpawn, ["BlueSpawn"] = BlueSpawn, ["RedBedCoords"] = RedBedCoords, ["BlueBedCoords"] = BlueBedCoords}
-  LoadArena() -- Storage.lua
+
   
    -- The Arrays are like this for easier access in the shop. Format is {Item, lore array of strings, cost string, cost number, cost item}
   ArmorArray = { [0] = {cItem(300, 1, 0, "unbreaking=10", ""), cItem(301, 1, 0, "unbreaking=10", "")}, -- Tier 0 leather leggings/boots
@@ -187,6 +190,7 @@ function BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, Block
   --Checks if a player has broken a bed block, and whos bed it is...
   if BlockType == 26 then-- if its a bed
     LOG(BlockX .. BlockY .. BlockZ)
+    LOG(BlueBedCoords.x .. " " .. BlueBedCoords.y .. " " .. BlueBedCoords.z)
     if BlockX == BlueBedCoords['x'] or BlockX == BlueBedCoords['x'] + 1 or BlockX == BlueBedCoords['x'] - 1 then
       if BlockY == BlueBedCoords['y'] then
         if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 or BlockZ == BlueBedCoords['z'] - 1 then
