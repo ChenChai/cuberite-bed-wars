@@ -39,7 +39,8 @@ function TeamShopClickedCallback(Window, Player, SlotNum, ClickAction, ClickedIt
   if Player:GetInventory():HasItems(UpgradeBuying[DisplayTier].Cost) then-- Check if player has resources
     Player:GetInventory():RemoveItem(UpgradeBuying[DisplayTier].Cost) -- removes resources from their inventory
     Player:SendMessage("Upgrade bought!")
-
+    
+      -- Apply the upgrade
     Player:GetTeam().Upgrades[UpgradeBuying.UpgradeType] = DisplayTier
     
     if UpgradeBuying.UpgradeType == "ManiacMiner" then

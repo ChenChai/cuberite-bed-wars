@@ -160,14 +160,23 @@ function OnProjectileHitEntity(ProjectileEntity, Entity)
 end
 
 function OnWorldTick(World, TimeDelta)
-  SpawnItemClock(TimeDelta) -- goes to pickup spawn
-  
-  local MobTickRate = 30
-  if World:GetWorldAge() % MobTickRate == 0 then
-    TickSpawnedMobs(World, MobTickRate) -- Items.Lua
+    -- If we have multiple worlds, we only want to tick the game once.
+  if World == Arena then
+    if GameTime ~= nil then
+      GameTime = GameTime + TimeDelta
+      SpawnItemClock() -- goes to pickup spawn
+      UpdateScore()
+    end
+    
+    local MobTickRate = 30
+    if World:GetWorldAge() % MobTickRate == 0 then
+      TickSpawnedMobs(World, MobTickRate) -- Items.Lua
+    end
+    
+    Arena:ForEachPlayer(CheckIfInTrap) --goes to ItsATrap.lua
+    Arena:ForEachPlayer(CheckHealPool) -- HealPool.lua
   end
-  Arena:ForEachPlayer(CheckIfInTrap) --goes to ItsATrap.lua
-  Arena:ForEachPlayer(CheckHealPool) -- HealPool.lua
+  
   return
 end
 

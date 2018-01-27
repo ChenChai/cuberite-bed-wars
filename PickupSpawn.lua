@@ -1,156 +1,103 @@
-function InitPickupSpawn()
+  -- NOTE: All numbers in ticks!
+function InitializePickupSpawn()
   --inits the pickups vars and other things
-  IronForgeTier = {
-                  [0] = 2;
-                  [1] = 3;
-                  [2] = 4;
-                  [3] = 4;
-                  [4] = 6}
-  GoldForgeTier = {
-                  [0] = 2;
-                  [1] = 3;
-                  [2] = 4;
-                  [3] = 4;
-                  [4] = 6}
-  EmeraldForgeTier = {
-                  [0] = 0;
-                  [1] = 0;
-                  [2] = 0;
-                  [3] = 1;
-                  [4] = 3}
-  IronSpawnMax = 15
-  GoldSpawnMax = 20
-  EmeraldSpawnMax = 65
-  DiamondSpawnMax = 30
+  ForgeTier = {["Iron"] = {
+                              [0] = 2;
+                              [1] = 3;
+                              [2] = 4;
+                              [3] = 4;
+                              [4] = 6;
+                              };
+               ["Gold"] = {
+                              [0] = 2;
+                              [1] = 3;
+                              [2] = 4;
+                              [3] = 4;
+                              [4] = 6;
+                              };
+               ["ForgeEmerald"] = {
+                              [0] = 0;
+                              [1] = 0;
+                              [2] = 0;
+                              [3] = 1;
+                              [4] = 3;
+                              };
+              }
   
-  IronCount = IronSpawnMax
-  GoldCount = GoldSpawnMax
-  EmeraldCount = EmeraldSpawnMax
-  DiamondCount  = DiamondSpawnMax
+  ResourceLocations = { Forges        = {
+                                       {x = 1, y = 41, z = 74, Team = BlueTeam};
+                                       {x = 1, y = 41, z = -39, Team = RedTeam};
+                                      }; 
+                      
+                      DiamondSpawns = {
+                                       {x = 1, y = 41, z = 42, Team = nil};
+                                       {x = 1, y = 41, z = -39, Team = nil};
+                                      };
+                      
+                      
+                      EmeraldSpawns = {
+                                       {x = -5, y = 42, z = -1, Team = nil};
+                                       {x = 7, y = 42, z = -1, Team = nil};
+                                      };
+                    }
+  
+  ResourceSpawnArray =  {Iron =         {Item = cItem(E_ITEM_IRON),     NextSpawnTime = 0, SpawnDelay = 5 * 1000,  Locations = ResourceLocations.Forges};
+                         Gold =         {Item = cItem(E_ITEM_GOLD),     NextSpawnTime = 0, SpawnDelay = 20 * 1000, Locations = ResourceLocations.Forges};
+                         ForgeEmerald = {Item = cItem(E_ITEM_EMERALD),  NextSpawnTime = 0, SpawnDelay = 5 * 1000,  Locations = ResourceLocations.Forges};
+                         Emerald =      {Item = cItem(E_ITEM_EMERALD),  NextSpawnTime = 0, SpawnDelay = 65 * 1000, Locations = ResourceLocations.EmeraldSpawns};
+                         Diamond =      {Item = cItem(E_ITEM_DIAMOND),  NextSpawnTime = 0, SpawnDelay = 30 * 1000, Locations = ResourceLocations.DiamondSpawns};
+                         }
+  
 end
 
-function SpawnItemClock(TimeDelta)
-  if Time == nil then
-    --do nothing
-  else
-    TimeMil = TimeMil + TimeDelta
-    if TimeMil >= 1000 then
-      TimeMil = TimeMil - 1000
-      Time = Time + 1
-        --EXECUTED EVERY SECOND
-      UpdateScore()--to main.lua
-      --Events
-      if Time == 360 then
-        --Upgrade Diamond gen to lvl 2
-        DiamondSpawnMax = 25
-      end
-      if Time == 720 then
-        --Em Gen to lvl 2
-        EmeraldSpawnMax = 60
-      end
-      if Time == 1080 then
-        --Dia to lvl 3
-        DiamondSpawnMax = 20
-      end
-      if Time == 1440 then
-        --Em to lvl 3
-        EmeraldSpawnMax = 55
-      end
-      if Time == 1800 then
-        --Destroy Beds
-        RedBed = false
-        BlueBed = false
-        UpdateScore()
-      end
-      
-      --Counters
-      IronCount = IronCount - 1
-      GoldCount = GoldCount - 1
-      EmeraldCount = EmeraldCount - 1
-      DiamondCount = DiamondCount - 1
-      
-      if IronCount == 0 then
-        SpawnIron()
-        IronCount = IronSpawnMax
-      end
-      if GoldCount == 0 then
-        SpawnGold()
-        GoldCount = GoldSpawnMax
-      end
-      if EmeraldCount == 0 then
-        SpawnEmerald()
-        EmeraldCount = EmeraldSpawnMax
-      end
-      if DiamondCount == 0 then
-        SpawnDiamond()
-        DiamondCount = DiamondSpawnMax
-      end
+function SpawnItemClock()
+  --Events
+  if GameTime >= 360 * 1000 then
+    --Upgrade Diamond gen to lvl 2
+    ResourceSpawnArray.Diamond.SpawnDelay = 25 * 1000
+  end
+  if GameTime >= 720 * 1000 then
+    --Em Gen to lvl 2
+    ResourceSpawnArray.Emerald.SpawnDelay = 60 * 1000
+  end
+  if GameTime >= 1080 * 1000 then
+    --Dia to lvl 3
+    ResourceSpawnArray.Diamond.SpawnDelay = 20 * 1000
+  end
+  if GameTime >= 1440 * 1000 then
+    --Em to lvl 3
+    ResourceSpawnArray.Emerald.SpawnDelay = 55 * 1000
+  end
+  
+  if GameTime == 1800 * 1000 then
+    --Destroy Beds
+    RedBed = false
+    BlueBed = false
+  end
+  
+  for ResourceName, Resource in next, ResourceSpawnArray do
+    if GameTime >= Resource.NextSpawnTime then
+      SpawnResource(ResourceName, Resource.Item, Resource.Locations)
+      Resource.NextSpawnTime = GameTime + Resource.SpawnDelay
     end
-    --EXECUTED EVERY TICK
-    --nothing LUL
   end
+  
+  return
 end
 
-function SpawnIron()--spawns iron
-  local loot = cItem(E_ITEM_IRON)
-  --Red Spawn
-  coords = IronGoldLocate['Red']
-  local loop = 0
-  while loop ~= IronForgeTier[RedTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
+  -- A list of locations to spawn that resource at 
+function SpawnResource(ResourceName, Item, Locations)
+  for i, Location in next, Locations do
+    local ItemStack = Item
+    
+    if Location.Team ~= nil and ForgeTier[ResourceName] ~= nil then
+      local Tier = Location.Team.Upgrades.ForgeTier
+      ItemStack.m_ItemCount = ForgeTier[ResourceName][Tier]
+      if ItemStack.m_ItemCount == 0 then return end
+    end
+    
+    Arena:SpawnItemPickup(Location.x, Location.y, Location.z, ItemStack, 0, 0, 0, 3600, true)
   end
-  --Blue
-  coords = IronGoldLocate['Blue']
-  local loop = 0
-  while loop ~= IronForgeTier[BlueTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
-  end
-end
-
-function SpawnGold()
-  local loot = cItem(E_ITEM_GOLD)
-  --Red Spawn
-  coords = IronGoldLocate['Red']
-  local loop = 0
-  while loop ~= GoldForgeTier[RedTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
-  end
-  --Blue
-  coords = IronGoldLocate['Blue']
-  local loop = 0
-  while loop ~= GoldForgeTier[BlueTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
-  end
-end
-
-function SpawnEmerald()-- 1 em
-  local loot = cItem(E_ITEM_EMERALD)
-  for pos, coords in ipairs(EmeraldLocate) do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-  end
-  --Red Spawn
-  coords = IronGoldLocate['Red']
-  local loop = 0
-  while loop ~= EmeraldForgeTier[RedTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
-  end
-  --Blue
-  coords = IronGoldLocate['Blue']
-  local loop = 0
-  while loop ~= EmeraldForgeTier[BlueTeam.Upgrades['ForgeTier']] do
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-    loop = loop + 1
-  end
-end
-
-function SpawnDiamond()-- 1 diamond
-  for pos, coords in ipairs(DiamondLocate) do
-    local loot = cItem(E_ITEM_DIAMOND)
-    Arena:SpawnItemPickup(coords['x'], coords['y'], coords['z'], loot, 0, 0, 0, 3600, true)
-  end
+  
+  return
 end

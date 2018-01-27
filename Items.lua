@@ -33,11 +33,7 @@ end
   
   -- TODO Move this into a different file for organization
   -- This function updates the time left on Dream Defenders and Bedbugs
-function TickSpawnedMobs(World, TimeDelta)
-  
-
-  
-  
+function TickSpawnedMobs(World, MobTickRate)
   for i, value in next, DreamDefenderArray do
     -- Removes the Dream Defender when its time runs out or it is dead
     if DreamDefenderArray[i].TimeLeft <= 0 or DreamDefenderArray[i]:IsTicking() == false then 
@@ -46,7 +42,7 @@ function TickSpawnedMobs(World, TimeDelta)
     else
   
   
-    DreamDefenderArray[i].TimeLeft = DreamDefenderArray[i].TimeLeft - TimeDelta -- Subtracts elapsed tick
+    DreamDefenderArray[i].TimeLeft = DreamDefenderArray[i].TimeLeft - MobTickRate -- Subtracts elapsed tick
     --updates name of Dream Defender, using health, name and time left.
     DreamDefenderArray[i]:SetCustomName("§c" .. DreamDefenderArray[i]:GetHealth() .." §9§lDream Defender §r§e" .. math.ceil(DreamDefenderArray[i].TimeLeft / 60) .. " s")
     
@@ -65,7 +61,7 @@ function TickSpawnedMobs(World, TimeDelta)
       table.remove(BedbugArray, i) 
     else
     
-    BedbugArray[i].TimeLeft = BedbugArray[i].TimeLeft - TimeDelta --Subtracts elapsed ticks from the duration remaining on the bedbug
+    BedbugArray[i].TimeLeft = BedbugArray[i].TimeLeft - MobTickRate --Subtracts elapsed ticks from the duration remaining on the bedbug
     --updates name of bedbug, using health, name and timeleft
     BedbugArray[i]:SetCustomName("§c" .. value:GetHealth() .. " Bedbug §r§e" .. math.ceil(BedbugArray[i].TimeLeft / 60) .. " s")
     
