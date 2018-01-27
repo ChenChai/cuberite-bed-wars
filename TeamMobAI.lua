@@ -4,7 +4,6 @@ function MobSearchForTarget(Monster, SearchDistance, AttackDistance, Damage, Kno
   Monster:GetWorld():ForEachPlayer(function(Player)
   
                                     local VectorSum = Monster:GetPosition() - Player:GetPosition()
-                                    -- XZ pythagorean distance
                                     local Distance = VectorSum:Length()
                                     
                                     if ClosestDistance > Distance then 
@@ -13,12 +12,8 @@ function MobSearchForTarget(Monster, SearchDistance, AttackDistance, Damage, Kno
                                       return
                                     end
                                     
-                                    if Monster.Team == nil then return end
-                                    if Player:GetTeam() == nil then return end
-                                    
-                                    
                                       -- Comparing team names should be more reliable than comparing the whole team object
-                                    if Player:GetTeam().GetName() ~= Monster.TeamName then
+                                    if Player:GetTeam():GetName() ~= Monster.TeamName and Player:IsGameModeSurvival() then
                                     
                                       if Distance <= SearchDistance then
                                         Monster:MoveToPosition(Player:GetPosition())
