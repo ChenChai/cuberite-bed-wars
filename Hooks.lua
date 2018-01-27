@@ -25,7 +25,7 @@ end
 function OnKilling(victim, killer, info)
   if victim:GetClass() == 'cPlayer' then
     local Name = victim:GetName()
-    Arena:BroadcastChat(Name .. ' has been killed with ArmorTier = ' .. victim.ArmorTier)
+    Arena:BroadcastChat(Name .. ' has been killed with ArmorTier = ' .. ArmorTier[victim:GetName()])
     if RedTeam:HasPlayer(Name) then
       if RedBed == true then
         Respawn(victim, RedSpawn['x'], RedSpawn['y'], RedSpawn['z'])
@@ -198,7 +198,6 @@ end
 
 function OnPlayerBreakingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
   --Checks if a player has broken a bed block, and whos bed it is...
-  LOG("test")
   return BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta) --in main.lua
 end
 

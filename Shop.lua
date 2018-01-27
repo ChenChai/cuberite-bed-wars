@@ -30,7 +30,7 @@ function ResetArmorCommand (Split, Player)
   --Player:SendMessage(ItemToFullString(Player:GetInventory():GetEquippedItem()))
   Player:GetInventory():AddItem(ArmorArray[0][1])
   Player:GetInventory():AddItem(ArmorArray[0][2])
-  Player.ArmorTier = 0
+  ArmorTier[Player:GetName()] = 0
   return true
 end
 
@@ -145,17 +145,17 @@ function ItemShopClickedCallback(a_Window, Player, a_SlotNum, a_ClickAction, a_C
   end
   
   if a_ClickedItem.m_ItemType == 274 then -- Checks if they're clicking on a pick
-    if Player.PickTier == nil then -- Initializes their tiers if they don't already have one
-      Player.PickTier = 0
+    if PickTier[Player:GetName()] == nil then -- Initializes their tiers if they don't already have one
+      PickTier[Player:GetName()] = 0
     end
-    if Player.AxeTier == nil then
-      Player.AxeTier = 0
+    if AxeTier[Player:GetName()] == nil then
+      AxeTier[Player:GetName()] = 0
     end
     
     ItemShopWindow:SetWindowTitle("Tools")  
                           --    PickArray and AxeArray are formatted like shop listings                            
-    ItemCategoryArray = { [10] = PickArray[math.min(Player.PickTier + 1, 4)]; -- Makes sure that the pickarray isn't going past diamond!
-                          [11] = AxeArray[math.min(Player.PickTier + 1, 4)];
+    ItemCategoryArray = { [10] = PickArray[math.min(PickTier[Player:GetName()] + 1, 4)]; -- Makes sure that the pickarray isn't going past diamond!
+                          [11] = AxeArray[math.min(PickTier[Player:GetName()] + 1, 4)];
                           [12] = {cItem(359, 1, 0, "", "")  ,{} , "Cost: 30 Iron", 30, 265} -- Shears
                           }
   end
@@ -263,26 +263,26 @@ function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, C
   if (ClickedItem.m_ItemType == 305 or ClickedItem.m_ItemType == 309 or ClickedItem.m_ItemType == 313) and Window:GetWindowTitle() == "Armor" then -- Makes sure they're buying armor 
     local BuyingTier = ItemCategoryArray[SlotNum][6] --The tier of the item that the player is buying
     
-    if BuyingTier == Player.ArmorTier then
+    if BuyingTier == ArmorTier[Player:GetName()] then
       return true
     end
     
     if Player:GetInventory():HasItems(ItemCost) then --Checks if player has the resources.
       Player:GetInventory():RemoveItem(ItemCost)
       
-      if Player.ArmorTier == nil then
-        Player.ArmorTier = 0
+      if ArmorTier[Player:GetName()] == nil then
+        ArmorTier[Player:GetName()] = 0
       end
-      LOG(Player.ArmorTier)
+      LOG(ArmorTier[Player:GetName()])
 
       LOG(BuyingTier)
       
-      Player:GetInventory():RemoveItem(ArmorArray[Player.ArmorTier][1])-- Removes the previous tiers of armor
-      Player:GetInventory():RemoveItem(ArmorArray[Player.ArmorTier][2])
+      Player:GetInventory():RemoveItem(ArmorArray[ArmorTier[Player:GetName()]][1])-- Removes the previous tiers of armor
+      Player:GetInventory():RemoveItem(ArmorArray[ArmorTier[Player:GetName()]][2])
       
       Player:GetInventory():AddItem(ArmorArray[BuyingTier][1]) -- Sets boots from ArmorArray based on tier in ItemCategoryArray
       Player:GetInventory():AddItem(ArmorArray[BuyingTier][2]) -- Sets leggings from ArmorArray based on tier in ItemCategoryArray
-      Player.ArmorTier = BuyingTier -- Sets armor tier (1=chainmail, 2=iron, 3=diamond)
+      ArmorTier[Player:GetName()] = BuyingTier -- Sets armor tier (1=chainmail, 2=iron, 3=diamond)
       
       --Player:TakeDamage(dtProjectile, nil, 2, 0) -- Applies some damage to render armor correctly
       return true
@@ -290,17 +290,17 @@ function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, C
     
   end
   ---END ARMOR ONLY SECTION
-  if ItemBuying.m_ItemType == 359 and  Player.HasShears == true then-- These are shears. If the player already has shears don't buy another set!
+  if ItemBuying.m_ItemType == 359 and  HasShears[Player:GetName()] == true then-- These are shears. If the player already has shears don't buy another set!
    Player:SendMessage("§6You already have shears.")
    return true
   end
   
-  if ItemBuying == PickArray[4][1] and Player.PickTier == 4 then -- If the player already has the diamond pickaxe
+  if ItemBuying == PickArray[4][1] and PickTier[Player:GetName()] == 4 then -- If the player already has the diamond pickaxe
     Player:SendMessage("§6You already the maximum tier pickaxe.")
     return true
   end
   
-  if ItemBuying == AxeArray[4][1] and Player.AxeTier == 4 then -- If the player already has the diamond axe.
+  if ItemBuying == AxeArray[4][1] and AxeTier[Player:GetName()] == 4 then -- If the player already has the diamond axe.
     Player:SendMessage("§6You already the maximum tier axe.")
     return true
   end
@@ -313,7 +313,7 @@ function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, C
     if Window:GetWindowTitle() == "Tools" then
       
       if ItemBuying.m_ItemType == 359 then
-        Player.HasShears = true -- If they bought shears set it so!
+        HasShears[Player:GetName()] = true -- If they bought shears set it so!
         return true
       end
     
@@ -322,18 +322,18 @@ function ItemShopCategoryClickedCallBack(Window, Player, SlotNum, ClickAction, C
       for i, value in next, PickArray do
         
         if PickArray[i][1] == ItemBuying then
-          Player.PickTier = i -- Updates their new pick tier
-          Window:SetSlot(Player, SlotNum, PickArray[math.min(Player.PickTier + 1, 4)][1]) -- Updates the shop window with the next tier
-          ItemCategoryArray[10] = PickArray[math.min(Player.PickTier + 1, 4)] -- Need to update the shop tables too
+          PickTier[Player:GetName()] = i -- Updates their new pick tier
+          Window:SetSlot(Player, SlotNum, PickArray[math.min(PickTier[Player:GetName()] + 1, 4)][1]) -- Updates the shop window with the next tier
+          ItemCategoryArray[10] = PickArray[math.min(PickTier[Player:GetName()] + 1, 4)] -- Need to update the shop tables too
           return true
         end
       end
       
       for i, value in next, AxeArray do 
         if AxeArray[i][1] == ItemBuying then
-          Player.AxeTier = i -- Updates their new axe tier
-          Window:SetSlot(Player, SlotNum, AxeArray[math.min(Player.AxeTier + 1, 4)][1]) -- Updates the shop window with the next tier
-          ItemCategoryArray[11] = AxeArray[math.min(Player.AxeTier + 1, 4)] -- Need to update the shop tables too
+          AxeTier[Player:GetName()] = i -- Updates their new axe tier
+          Window:SetSlot(Player, SlotNum, AxeArray[math.min(AxeTier[Player:GetName()] + 1, 4)][1]) -- Updates the shop window with the next tier
+          ItemCategoryArray[11] = AxeArray[math.min(AxeTier[Player:GetName()] + 1, 4)] -- Need to update the shop tables too
           return true
         end
       end

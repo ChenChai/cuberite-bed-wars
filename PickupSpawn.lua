@@ -38,7 +38,7 @@ function SpawnItemClock(TimeDelta)
       TimeMil = TimeMil - 1000
       Time = Time + 1
         --EXECUTED EVERY SECOND
-        
+      UpdateScore()--to main.lua
       --Events
       if Time == 360 then
         --Upgrade Diamond gen to lvl 2

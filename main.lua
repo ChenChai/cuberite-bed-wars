@@ -24,6 +24,11 @@ function Initialize(Plugin)
 end
 
 function InitTeams()
+  HasShears = {}
+  ArmorTier = {}
+  PickTier = {}
+  AxeTier = {}
+  
   Arena = cRoot:Get():GetWorld(WorldName) -- TODO figure out how to let people select the world properly and de-hardcode
   ArenaOriginal = cRoot:Get():GetWorld(WorldNameOriginal)
   
@@ -116,8 +121,6 @@ function JoinTeam(Split, Player)
       RedAmount = RedAmount + 1
       Player:SetTeam(RedTeam)
       Player:SendMessage('Success')
-      Player.ArmorTier = 0
-      Player.PickTier = 0
     elseif Split[2] == 'blue' then
       BlueAmount = BlueAmount + 1 
       Player:SetTeam(BlueTeam)
@@ -165,10 +168,11 @@ function StartPlayer(Player)
   if Player:GetTeam() == nil then
     Player:SetGameMode(gmSpectator)
   else
-    Player.ArmorTier = 0
-    Player.AxeTier = 0
-    Player.PickTier = 0
-    Player.HasShears = false
+    local PlayerName = Player:GetName()
+    ArmorTier[PlayerName] = 0
+    AxeTier[PlayerName] = 0
+    PickTier[PlayerName] = 0
+    HasShears[PlayerName] = false
     
     if Player:GetTeam():GetName() == 'Red' then
       Respawn(Player, RedSpawn['x'], RedSpawn['y'], RedSpawn['z'])
@@ -182,6 +186,7 @@ end
 function BrokenBlock(Player, BlockX, BlockY, BlockZ, BlockFace, BlockType, BlockMeta)
   --Checks if a player has broken a bed block, and whos bed it is...
   if BlockType == 26 then-- if its a bed
+    LOG(BlockX .. BlockY .. BlockZ)
     if BlockX == BlueBedCoords['x'] or BlockX == BlueBedCoords['x'] + 1 or BlockX == BlueBedCoords['x'] - 1 then
       if BlockY == BlueBedCoords['y'] then
         if BlockZ == BlueBedCoords['z'] or BlockZ == BlueBedCoords['z'] + 1 or BlockZ == BlueBedCoords['z'] - 1 then
@@ -229,6 +234,15 @@ end
 function UpdateScore()
   --Looks at everything and updates scoreboard
   Board:GetObjective('Main'):Reset()
+  --Time
+  local Time = Time
+  local MinCount = Time / 60
+  local TimeMin = 0
+  while MinCount >= 1 do
+    MinCount = MinCount - 1
+    TimeMin = TimeMin + 1
+  end
+  Board:GetObjective('Main'):SetScore('Time ' .. TimeMin .. ':' .. (Time % 60), 0)
   if RedBed == true then
     Board:GetObjective('Main'):SetScore('Red Bed is Intact', 0)
   else
@@ -242,42 +256,42 @@ function UpdateScore()
   end
 end
 
-function Respawn(player, x, y, z)
+function Respawn(Player, x, y, z)
   --Respawns player at spec coords, since the player isnt dead... look it up
-  player:Heal(20)
-  player:TeleportToCoords(x, y, z)
-  local armor = player.ArmorTier
-  local pick = player.PickTier
-  local axe = player.AxeTier
-  local inv = player:GetInventory()
+  local PlayerName = Player:GetName()
+  Player:Heal(20)
+  Player:TeleportToCoords(x, y, z)
+  local armor = ArmorTier[PlayerName]
+  local pick = PickTier[PlayerName]
+  local axe = AxeTier[PlayerName]
+  local inv = Player:GetInventory()
   inv:Clear()
   
   -- Gib Armors ploz
-  LOG(player.ArmorTier)
   
   -- See Utilities.lua for add item color; it takes RGB values and colors the armor with that
-  local ArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), player:GetTeam().Color), 
-                      AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), player:GetTeam().Color),
-                      AddItemColor(ArmorArray[armor][1], player:GetTeam().Color), 
-                      AddItemColor(ArmorArray[armor][2], player:GetTeam().Color)
+  local ColorArmorArray = {AddItemColor(cItem(E_ITEM_LEATHER_CAP, 1, 0, "unbreaking=10"), Player:GetTeam().Color), 
+                      AddItemColor(cItem(E_ITEM_LEATHER_TUNIC, 1, 0, "unbreaking=10"), Player:GetTeam().Color),
+                      AddItemColor(ArmorArray[armor][1], Player:GetTeam().Color), 
+                      AddItemColor(ArmorArray[armor][2], Player:GetTeam().Color)
                       }
   
   for i, value in next, ArmorArray do
-    if player:GetTeam() ~= nil and player:GetTeam().Upgrades.ReinforcedArmor > 0 then
-      value:AddEnchantment(cEnchantments.enchProtection, player:GetTeam().Upgrades.ReinforcedArmor, false)
+    if Player:GetTeam() ~= nil and Player:GetTeam().Upgrades.ReinforcedArmor > 0 then
+      value:AddEnchantment(cEnchantments.enchProtection, Player:GetTeam().Upgrades.ReinforcedArmor, false)
     end
   end
             
-  inv:SetArmorSlot(0, ArmorArray[1])
-  inv:SetArmorSlot(1, ArmorArray[2])
-  inv:SetArmorSlot(2, ArmorArray[3])
-  inv:SetArmorSlot(3, ArmorArray[4])
+  inv:SetArmorSlot(0, ColorArmorArray[1])
+  inv:SetArmorSlot(1, ColorArmorArray[2])
+  inv:SetArmorSlot(2, ColorArmorArray[3])
+  inv:SetArmorSlot(3, ColorArmorArray[4])
   -- Gib Pick
   inv:SetHotbarSlot(1, PickArray[pick][1])
   --Gib Axe
   inv:SetHotbarSlot(2, AxeArray[axe][1])
   --
-  if player.HasShears == true then
+  if HasShears[PlayerName] == true then
     inv.SetHotbarSlot(3, cItem(E_ITEM_SHEARS, 1, 0, "unbreaking=10"))
   end
 end
