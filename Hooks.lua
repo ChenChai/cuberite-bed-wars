@@ -79,7 +79,7 @@ function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, C
   local World = Player:GetWorld()
   local HeldItem = cItem(Player:GetInventory():GetEquippedItem())
   
-  if HeldItem.m_ItemType == 383 and HeldItem.m_CustomName == "§rDream Defender" then -- Checks if holding a spawn egg and is a dream defender!
+  if HeldItem.m_ItemType == 383 and HeldItem.m_CustomName == "§rDream Defender" and BlockY ~= 255 then -- Checks if holding a spawn egg and is a dream defender! If they're clicking on air, Y defaults to 255 for some reason
     local BX = BlockX
     local BY = BlockY
     local BZ = BlockZ
@@ -108,20 +108,11 @@ function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, C
     BY = BY - 2
     end
     
-    local MobID = Player:GetWorld():SpawnMob(BX, BY, BZ, mtIronGolem) --Gets ID of Iron Golem and spawns it
+    LOG(BX .. " " .. BY .. " " .. BZ )
     
-    Player:GetWorld():DoWithEntityByID(MobID,
-      function(Entity)
-       -- Entity:SetCustomName(Player:GetTeam():GetDisplayName() .. "Dream Defender")
-        Entity:SetCustomName("Dream Defender")
-        Entity:SetCustomNameAlwaysVisible(true)
-        Entity.TimeLeft = 12000
-        if Player:GetTeam() ~= nil then Entity.TeamName = Player:GetTeam():GetName() end -- Assigns the Dream Defender a team based on the thrower's team
-        table.insert(DreamDefenderArray, Entity)
-      end)
+    SpawnTeamMob(Player, Player:GetTeam(), mtIronGolem, BX, BY, BZ, "§lDream Defender", 200 * 1000, 10, 6, 20, 5, CustomMobArray) -- Items.lua
     Player:GetInventory():RemoveOneEquippedItem() -- Takes a spawn egg away
     return true
-
   end
     
   if HeldItem.m_ItemType == 373 and HeldItem.m_ItemDamage == 0 then -- Checks if they're using a Water bottle (damage == 0 is water bottle)
@@ -129,7 +120,6 @@ function OnPlayerUsingItem(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, C
     
     Player:AddEntityEffect(HeldItem.m_LoreTable[4], HeldItem.m_LoreTable[5] * 20, HeldItem.m_LoreTable[6], 1) -- Last argument is distance modifier, doesn't matter,
                                                                                                              -- only for splash potions
-                                                                                                             
     Player:GetInventory():RemoveOneEquippedItem() -- Takes the potion away
     return true
   end
@@ -147,10 +137,8 @@ function OnProjectileHitBlock(ProjectileEntity, BlockX, BlockY, BlockZ, BlockFac
       Thrower = Entity
     end)
   
-  
-  
   if ProjectileEntity:GetProjectileKind() == cProjectileEntity.pkSnowball then -- Check if projectile is snowball
-    SpawnTeamMob(mtSilverfish, "Bedbug", Thrower:GetTeam(), 1000, BlockX, BlockY, BlockZ, World, BedbugArray)
+   SpawnTeamMob(Thrower, Thrower:GetTeam(), mtSilverfish, BlockX, BlockY, BlockZ, "Bedbug", 15 * 1000, 10, 3, 2, 5, CustomMobArray)
   end
 
 end
@@ -168,9 +156,16 @@ function OnWorldTick(World, TimeDelta)
       UpdateScore()
     end
     
-    local MobTickRate = 30
-    if World:GetWorldAge() % MobTickRate == 0 then
-      TickSpawnedMobs(World, MobTickRate) -- Items.Lua
+    
+    
+    if TimeSinceMobsTicked == nil then TimeSinceMobsTicked = 0 end
+    
+    
+    if TimeSinceMobsTicked >= 1000 then
+      TickCustomMobs(World, TimeSinceMobsTicked) -- Items.Lua
+      TimeSinceMobsTicked = 0
+    else
+      TimeSinceMobsTicked = TimeSinceMobsTicked + TimeDelta
     end
     
     Arena:ForEachPlayer(CheckIfInTrap) --goes to ItsATrap.lua

@@ -17,6 +17,9 @@ function InitializeTeams()
   RedTeam:Reset()
   BlueTeam.WoolColor = E_META_WOOL_BLUE
   RedTeam.WoolColor = E_META_WOOL_RED
+  BlueTeam:SetPrefix("§1")
+  RedTeam:SetPrefix("§4")
+  
   
     -- cColor objects can be attached to armor!
   BlueTeam.Color = cColor(0, 0, 255)
